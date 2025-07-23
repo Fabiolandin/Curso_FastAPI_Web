@@ -4,16 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FastAPI Web na Geek University</title>
-        <!-- Aqui fizemos link com o arquivo css da static-->
-        <link rel="stylesheet" href="{{ url_for('static', path='css/styles.css') }}">
     
 </head>
 <body>
+    {% include 'navbar.html' %}
     <h1> FastApi Web</h1>
-    <div>
-        <a href="/">Home</a>
-        <a href="/servicos">Serviços</a>
-    </div>
+        {% block navbar %} 
+        {%  endblock %}
     <div class="container">
         {% block container %} 
         {%  endblock %}
