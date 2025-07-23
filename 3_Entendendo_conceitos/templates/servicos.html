@@ -1,7 +1,11 @@
 {% extends '_base.html' %}
 {% block container %}
         <center>
-            <p> Estamos na página Serviços</p>
+            <h1> Cadastro de Serviços</h1>
+            <form action="/servicos" method="post" autocomplet="off">
+                <input type="text" name="servico" placeholder="Informe o servico" required autofocus />
+                <button type="submit"> Cadastrar </button>
+            </form>
         </center>
 
 {% endblock %}
