@@ -1,7 +1,36 @@
 {% extends 'base.html' %}
 {% block container %}
-        <center>
-            <h1>Página de cadastro de clientes</h1>
-        </center>
-
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h2 class="h4 mb-0 text-center">Cadastro de Cliente</h2>
+            </div>
+            <div class="card-body">
+                <form action="/cliente" method="post">
+                    <div class="mb-3">
+                        <label for="nome" class="form-label">Nome completo</label>
+                        <input type="text" class="form-control" id="nome" name="nome" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="idade" class="form-label">Idade</label>
+                        <input type="number" class="form-control" id="idade" name="idade" required>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="cpf" class="form-label">CPF</label>
+                        <input type="text" class="form-control" id="cpf" name="cpf" required>
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-person-plus"></i> Cadastrar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

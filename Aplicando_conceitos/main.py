@@ -24,9 +24,43 @@ async def produto(request: Request):
 
     return templates.TemplateResponse('produto.html', context=context)
 
+#Post de produto / receber dados do formulario
+@app.post('/produto')
+async def cad_produto(request: Request):
+    form = await request.form()
+
+    nome: str = form.get('nome')
+    descricao: str = form.get('descricao')
+    quantidade: int = form.get('quantidade')
+
+    print(f'Produto: {nome}, Descrição: {descricao}, Quantidade: {quantidade}')
+
+    context = {
+        "request": request
+    }
+
+    return templates.TemplateResponse('produto.html', context=context)
+
 #Criando rota para cliente
 @app.get('/cliente')
 async def cliente(request: Request):
+    context = {
+        "request": request
+    }
+
+    return templates.TemplateResponse('cliente.html', context=context)
+
+#Post de cliente / receber dados do formulario
+@app.post('/cliente')
+async def cad_cliente(request: Request):
+    form = await request.form()
+
+    nome: str = form.get('nome')
+    idade: int = form.get('idade')
+    cpf: str = form.get('cpf')
+
+    print(f'Nome: {nome}, Idade: {idade}, CPF: {cpf}')
+
     context = {
         "request": request
     }

@@ -1,9 +1,15 @@
 {% extends 'base.html' %}
-
 {% block container %}
-        <center>
-            <h1>Página inicial</h1>
-            <h2> Olá {{ usuario }} </h2>
-        </center>
-
+<div class="row justify-content-center">
+    <div class="col-md-8 text-center">
+        <div class="card shadow">
+            <div class="card-body">
+                <h1 class="display-4">Bem-vindo!</h1>
+                <p class="lead">Olá {{ usuario }}, esse é seu sistema de cadastros</p>
+                <hr class="my-4">
+                <p>Utilize o menu acima para navegar</p>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
