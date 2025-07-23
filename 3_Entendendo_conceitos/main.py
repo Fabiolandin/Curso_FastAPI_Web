@@ -7,8 +7,7 @@ from fastapi.staticfiles import StaticFiles
 #Instanciando FASTAPI e colocando na variavel APP, e fazendo o mesmo para resRender Jinja2
 app = FastAPI()
 templates = Jinja2Templates(directory='templates')
-# Nessa aplicação monte para min o /static com o diretorio static com nome de montagem static
-app.mount('/static', StaticFiles(directory='static'), name='static')
+app.mount('/static', StaticFiles(directory='static'), name='static') # Nessa aplicação monte para min o /static com o diretorio static com nome de montagem static
 
 #Criando a rota index e retornando o index.html como view
 @app.get('/')
@@ -34,8 +33,8 @@ async def cad_servicos(request: Request):
     form = await request.form()
 
     servico: str = form.get('servico')
-
     print(f'Serviço: {servico}')
+
     context = {
         "request": request
     }
