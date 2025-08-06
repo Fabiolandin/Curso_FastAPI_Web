@@ -1,13 +1,14 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy.orm import Mapped, mapped_column, validates
+from sqlalchemy import String, Integer
 from core.configs import settings
 
 class MembroModel(settings.DBBaseModel):
     __tablename__ = 'membros'
 
-    id: int = Column(Integer, primary_key=True, autoincrement=True)
-    nome: str = Column(String(100))
-    funcao: str = Column(String(100))
-    imagem: str = Column(String(100))
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    nome: Mapped[str] = mapped_column(String(100))
+    funcao: Mapped[str] = mapped_column(String(100))
+    imagem: Mapped[str] = mapped_column(String(100))
 
     @validates('funcao')
     def _validate_funcao(self, key, value):
@@ -15,4 +16,4 @@ class MembroModel(settings.DBBaseModel):
             raise ValueError("Você precisa informar uma função válida.")
         if 'Python' not in value:
             raise ValueError("A função deve conter a palavra 'Python'.")
-        return value
+        return

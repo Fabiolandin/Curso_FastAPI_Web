@@ -1,14 +1,12 @@
 from typing import List
 from datetime import datetime
 
-import sqlalchemy.orm as orm
-
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from core.configs import settings
 from models.tag_model import TagModel
 from models.autor_model import AutorModel
 
-from sqlalchemy import Table, Column, Integer, String, DateTime, ForeignKey
-
+from sqlalchemy import Table, Integer, String, DateTime, ForeignKey, Column
 
 # Post pode ter várias tags
 tags_post = Table(
@@ -26,24 +24,32 @@ comentarios_post = Table(
     Column('id_comentario', Integer, ForeignKey('comentarios.id'))
 )
 
-
 class PostModel(settings.DBBaseModel):
     """Posts do blog"""
-    __tablename__: str = 'posts'
+    __tablename__ = 'posts'
 
-    id: int = Column(Integer, primary_key=True, autoincrement=True)
-    titulo: str = Column(String(200))
-    data: datetime = Column(DateTime, default=datetime.now, index=True)
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    titulo: Mapped[str] = mapped_column(String(200))
+    data: Mapped[datetime] = mapped_column(DateTime, default=datetime.now, index=True)
 
     # Um Post pode ter várias tags
-    tags: List[TagModel] = orm.relationship('TagModel', secondary=tags_post, backref='tagp', lazy='joined')
+    tags: Mapped[List[TagModel]] = relationship(
+        'TagModel',
+        secondary=tags_post,
+        backref='tagp',
+        lazy='joined'
+    )
 
-    imagem: str = Column(String(100)) # 900x400
-    texto: str = Column(String(1000))
+    imagem: Mapped[str] = mapped_column(String(100))  # 900x400
+    texto: Mapped[str] = mapped_column(String(1000))
 
-    # Um Post pode ter vários comentários (Não importamos e usamos ComentarioModel como tipo de dados aqui pois causa erro de import circular com a tabela ComentarioModel)
-    comentarios: List[object] = orm.relationship('ComentarioModel', secondary=comentarios_post, backref='comentario', lazy='joined')
+    # Um Post pode ter vários comentários
+    comentarios: Mapped[List[object]] = relationship(
+        'ComentarioModel',
+        secondary=comentarios_post,
+        backref='comentario',
+        lazy='joined'
+    )
 
-    id_autor: int = Column(Integer, ForeignKey('autores.id'))
-    autor: AutorModel = orm.relationship('AutorModel', lazy='joined')
-
+    id_autor: Mapped[int] = mapped_column(ForeignKey('autores.id'))
+    autor: Mapped[AutorModel] = relationship('AutorModel', lazy='joined')

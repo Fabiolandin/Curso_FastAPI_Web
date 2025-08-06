@@ -1,21 +1,19 @@
 from datetime import datetime
 
-import sqlalchemy.orm as orm
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy import Integer, String, DateTime, ForeignKey
 
 from core.configs import settings
 from models.post_model import PostModel
 
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
-
-
 class ComentarioModel(settings.DBBaseModel):
-    __tablename__: str = 'comentarios'
+    __tablename__ = 'comentarios'
 
-    id: int = Column(Integer, primary_key=True, autoincrement=True)
-    data: datetime = Column(DateTime, default=datetime.now, index=True)
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    data: Mapped[datetime] = mapped_column(DateTime, default=datetime.now, index=True)
 
-    id_post: int = Column(Integer, ForeignKey('posts.id'))
-    post: PostModel = orm.relationship('PostModel', lazy='joined')
+    id_post: Mapped[int] = mapped_column(ForeignKey('posts.id'))
+    post: Mapped["PostModel"] = relationship('PostModel', lazy='joined')
 
-    autor: str = Column(String(200))
-    texto: str = Column(String(400))
+    autor: Mapped[str] = mapped_column(String(200))
+    texto: Mapped[str] = mapped_column(String(500))

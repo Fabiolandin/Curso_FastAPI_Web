@@ -1,21 +1,17 @@
-import sqlalchemy.orm as orm
-
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from core.configs import settings
 from models.area_model import AreaModel
-
-from sqlalchemy import Column, Integer, String, ForeignKey
-
+from sqlalchemy import Integer, String, ForeignKey
 
 class DuvidaModel(settings.DBBaseModel):
-    __tablename__: str = 'duvida'
+    __tablename__ = 'duvida'
 
-    id: int = Column(Integer, primary_key=True, autoincrement=True)
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
 
-    id_area: int = Column(Integer, ForeignKey('areas.id'))
-    area: AreaModel = orm.relationship('AreaModel', lazy='joined')
+    id_area: Mapped[int] = mapped_column(ForeignKey('areas.id'))
+    area: Mapped["AreaModel"] = relationship('AreaModel', lazy='joined')
 
-    titulo: str = Column(String(200))
-    resposta: str = Column(String(400))
-
+    titulo: Mapped[str] = mapped_column(String(200))
+    resposta: Mapped[str] = mapped_column(String(400))
     
 

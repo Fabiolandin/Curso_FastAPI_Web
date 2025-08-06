@@ -1,6 +1,6 @@
 from typing import List
 
-import sqlalchemy.orm as orm
+from sqlalchemy.orm import Mapped, relationship
 from sqlalchemy import Table, Column, Integer, String, ForeignKey
 
 from core.configs import settings
@@ -20,9 +20,9 @@ class AutorModel(settings.DBBaseModel):
     """Autor das postagens no blog"""
     __tablename__: str = 'autores'
 
-    id: int = Column(Integer, primary_key=True, autoincrement=True)
-    nome: str = Column(String(100))
-    imagem: str = Column(String(100)) # 40x40
+    id: Mapped[int] = Column(Integer, primary_key=True, autoincrement=True)
+    nome: Mapped[str] = Column(String(100))
+    imagem: Mapped[str] = Column(String(100)) # 40x40
 
     # Um autor pode ter várias tags
-    tags: List[TagModel] = orm.relationship('TagModel', secondary=tags_autor, backref='taga', lazy='joined')
+    tags: Mapped[List[TagModel]] = relationship('TagModel', secondary=tags_autor, backref='taga', lazy='joined')

@@ -1,12 +1,10 @@
 from core.configs import settings
-
-from sqlalchemy import Column, Integer, String
-
+from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import String
 
 class TagModel(settings.DBBaseModel):
     """Temos tags em várias partes do website"""
-    __tablename__: str = 'tags'
+    __tablename__ = 'tags'
 
-    id: int = Column(Integer, primary_key=True, autoincrement=True)
-    tag: str = Column(String(100))
-
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    tag: Mapped[str] = mapped_column(String(100))
