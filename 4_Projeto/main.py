@@ -51,6 +51,39 @@ async def faq(request: Request):
     }
     return templates.TemplateResponse('faq/faq.html', context=context)
 
+#Criando rota blog_home
+@app.get('/blog_home', name="blog_home")
+async def blog_home(request: Request):
+    context = {
+        "request": request
+    }
+    return templates.TemplateResponse('blog_home/blog_home.html', context=context)
+
+#Criando rota blog_post
+@app.get('/blog_post', name="blog_post")
+async def blog_post(request: Request):
+    context = {
+        "request": request
+    }
+    return templates.TemplateResponse('blog_post/blog_post.html', context=context)
+
+#Criando rota portifolio_over
+@app.get('/portifolio_over', name="portifolio_over")
+async def portifolio_over(request: Request):
+    context = {
+        "request": request
+    }
+    return templates.TemplateResponse('portifolio_over/portifolio_over.html', context=context)
+
+#Criando rota portifolio_item
+@app.get('/portifolio_item', name="portifolio_item")
+async def portifolio_item(request: Request):
+    context = {
+        "request": request
+    }
+    return templates.TemplateResponse('portifolio_item/portifolio_item.html', context=context)
+
+
 if __name__ == "__main__":
     import uvicorn
     
