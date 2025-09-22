@@ -3,6 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession, AsyncEngine, create_async_engin
 
 from core.configs import settings
 
+#Passando o URL do banco para a criação do engine e pedindo para não exibir os logs SQL
 engine: AsyncEngine = create_async_engine(settings.DB_URL, echo=False)
 
 def get_session() -> AsyncSession:
@@ -13,7 +14,9 @@ def get_session() -> AsyncSession:
         class_=AsyncSession,
         bind=engine
     )
+
     session: AsyncSession = __async_session()
+    
     return session
 
 
