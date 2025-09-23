@@ -7,7 +7,7 @@ from core.database import get_session
 
 class BaseController:
 
-    def __init(self, request: Request, model: object) -> None:
+    def __init__(self, request: Request, model: object) -> None:
         self.request: Request = request
         self.model: object = model
     
