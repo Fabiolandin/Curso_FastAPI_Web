@@ -2,11 +2,13 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 
 from views import home_view
+from views.admin import admin_view
 
 #Configuração do FastAPI, desabilitando a documentação automática
 app = FastAPI(docs_url=None, redoc_url=None)
 #Incluindo as rotas do home_view
 app.include_router(home_view.router)
+app.include_router(admin_view.router)
 
 #Definindo o diretório para arquivos estáticos
 app.mount("/static", StaticFiles(directory="static"), name="static")

@@ -100,4 +100,4 @@ class MembroAdmin(BaseCRUDView):
         
         return RedirectResponse(request.url_for("membro_list"), status_code=status.HTTP_202_ACCEPTED)
     
-    membro_admin = MembroAdmin()
+membro_admin = MembroAdmin()
