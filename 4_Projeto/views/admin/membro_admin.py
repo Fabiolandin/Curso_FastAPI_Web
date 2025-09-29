@@ -46,8 +46,58 @@ class MembroAdmin(BaseCRUDView):
         """ Rota para criar um membro """
         membro_controller: MembroController = MembroController(request)
 
+        #Se o request for GET
         if request.method == 'GET':
             #Adicionar o request no contexto
-            
+            context = {'request': membro_controller.request, "ano": datetime.now().year}
 
-        return await super().object_create()
+            return settings.TEMPLATES.TemplateResponse(f"admin/membro_create.html", context=context)
+        
+        #Se o request for POST
+        #Recebe os dados do formulário
+        form = await request.form()
+        dados: set = None
+
+        try:
+            await membro_controller.post_crud()
+        except ValueError as err:
+            nome: str = form.get('nome')
+            funcao: str = form.get('funcao')
+            dados = {'nome': nome, 'funcao': funcao}
+            context = {'request': request, "ano": datetime.now().year, 'error': err, 'objeto': dados}
+            return settings.TEMPLATES.TemplateResponse(f"admin/membro_create.html", context=context)
+        return RedirectResponse(request.url_for("membro_list"), status_code=status.HTTP_201_CREATED)
+    
+
+    async def object_edit(self, request: Request) -> Response:
+        """ Rota para carregar o template de edição do membro """
+
+        membro_controller: MembroController = MembroController(request)
+        membro_id: int = request.path_params['membro_id']
+
+        #Se o request for GET
+        if request.method == 'GET':
+            return await super().object_details(object_controller=membro_controller, obj_id=membro_id)
+        
+        #Se o request for POST
+        membro = await membro_controller.get_one_crud(id_obj=membro_id)
+
+        if not membro:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+        
+        #Recebe os dados do formulário
+        form = await request.form()
+        dados: set = None
+
+        try:
+            await membro_controller.put_crud(obj=membro)
+        except ValueError as err:
+            nome: str = form.get('nome')
+            funcao: str = form.get('funcao')
+            dados = {'id': membro_id, 'nome': nome, 'funcao': funcao}
+            context = {'request': request, "ano": datetime.now().year, 'error': err, 'objeto': dados}
+            return settings.TEMPLATES.TemplateResponse("admin/membro_edit.html", context=context)
+        
+        return RedirectResponse(request.url_for("membro_list"), status_code=status.HTTP_202_ACCEPTED)
+    
+    membro_admin = MembroAdmin()
