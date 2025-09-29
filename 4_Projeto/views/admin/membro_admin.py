@@ -24,7 +24,7 @@ class MembroAdmin(BaseCRUDView):
         self.router.routes.append(Route(path='/membro/edit/{membro_id: int}', endpoint=self.object_edit, methods=["GET", "POST"], name="membro_edit"))
         self.router.routes.append(Route(path='/membro/delete/{membro_id: int}', endpoint=self.object_delete, methods=["DELETE"], name="membro_delete"))
 
-        super().__init__('membros')
+        super().__init__('membro')
 
     
     async def object_list(self, request: Request) -> Response:
@@ -51,7 +51,7 @@ class MembroAdmin(BaseCRUDView):
             #Adicionar o request no contexto
             context = {'request': membro_controller.request, "ano": datetime.now().year}
 
-            return settings.TEMPLATES.TemplateResponse(f"admin/membro_create.html", context=context)
+            return settings.TEMPLATES.TemplateResponse(f"admin/membro/create.html", context=context)
         
         #Se o request for POST
         #Recebe os dados do formulário
@@ -65,7 +65,8 @@ class MembroAdmin(BaseCRUDView):
             funcao: str = form.get('funcao')
             dados = {'nome': nome, 'funcao': funcao}
             context = {'request': request, "ano": datetime.now().year, 'error': err, 'objeto': dados}
-            return settings.TEMPLATES.TemplateResponse(f"admin/membro_create.html", context=context)
+            return settings.TEMPLATES.TemplateResponse(f"admin/membro/create.html", context=context)
+        
         return RedirectResponse(request.url_for("membro_list"), status_code=status.HTTP_201_CREATED)
     
 
@@ -96,7 +97,7 @@ class MembroAdmin(BaseCRUDView):
             funcao: str = form.get('funcao')
             dados = {'id': membro_id, 'nome': nome, 'funcao': funcao}
             context = {'request': request, "ano": datetime.now().year, 'error': err, 'objeto': dados}
-            return settings.TEMPLATES.TemplateResponse("admin/membro_edit.html", context=context)
+            return settings.TEMPLATES.TemplateResponse("admin/membro/edit.html", context=context)
         
         return RedirectResponse(request.url_for("membro_list"), status_code=status.HTTP_202_ACCEPTED)
     
