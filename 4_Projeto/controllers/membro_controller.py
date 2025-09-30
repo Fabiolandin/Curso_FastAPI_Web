@@ -24,6 +24,12 @@ class MembroController(BaseController):
         funcao: str = form.get('funcao')
         imagem: UploadFile = form.get('imagem')
 
+        print("NOME:", nome)
+        print("FUNCAO:", funcao)
+        print("IMAGEM:", imagem)
+        if not nome or not funcao or not imagem or not imagem.filename:
+            raise ValueError("Todos os campos são obrigatórios.")
+        
         #Nome aleatório para a imagem
         arquivo_ext: str = imagem.filename.split('.')[-1]
         novo_nome: str = f"{str(uuid4())}.{arquivo_ext}"

@@ -16,4 +16,4 @@ class MembroModel(settings.DBBaseModel):
             raise ValueError("Você precisa informar uma função válida.")
         if 'Python' not in value:
             raise ValueError("A função deve conter a palavra 'Python'.")
-        return
+        return value

@@ -1,7 +1,7 @@
 {% extends 'admin/_base.html' %}
 
-{%block content%}
-    <h1 class="h3" mb-4 text-gray-800">Criar Membro</h1>
+{% block content %}
+    <h1 class="h3 mb-4 text-gray-800">Criar Membro</h1>
 
     {% if error %}
         <div class="alert alert-warning" role="alert">
@@ -17,10 +17,11 @@
             <label for="funcao" class="form-label">Função</label>
             <input type="text" class="form-control" id="funcao" name="funcao" value="{% if objeto %}{{ objeto.funcao }}{% endif %}" required>
         </div>
-        <div class="mb-3 form-check">
+        <div class="mb-3" form-check>
             <label for="imagem" class="form-label">Imagem</label>
             <input type="file" class="form-file-input" id="imagem" name="imagem" required>
         </div>
 
-        <button type="button" class="btn btn-primary">Salvar</button>
+        <button type="submit" class="btn btn-primary">Salvar</button>
+    </form>
 {% endblock %}

@@ -20,7 +20,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% if dados}
+                    {% if dados %}
                         {% for dado in dados %}
                         <tr>
                             <td class="text-center">
@@ -52,17 +52,6 @@
                     {% endif %}
                 </tbody>
             </table>
-        </div>
-        <div class="card-footer d-flex align-items-rigth">
-            <div class="row">
-                <div class="col">
-                    <a href="{{ url_for('membro_list') }}" class="btn btn-info">Voltar</a>
-                </div>
-                <div class="col">
-                    <a href="#" data-url="{{ url_for('membro_delete', membro_id=object.id) }}" data-bs-toggle="modal" data-target="#modal-delete" class="btn btn-danger">Deletar</a>
-            </div>
-            <div class="col">
-                <a href="{{ url_for('membro_edit', membro_id=object.id) }}" class="btn btn-primary">Editar</a>
         </div>
     </div>
 </div>

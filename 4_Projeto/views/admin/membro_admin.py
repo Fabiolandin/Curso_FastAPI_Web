@@ -20,9 +20,9 @@ class MembroAdmin(BaseCRUDView):
 
         self.router.routes.append(Route(path='/membro/list', endpoint=self.object_list, methods=["GET"], name="membro_list"))
         self.router.routes.append(Route(path='/membro/create', endpoint=self.object_create, methods=["GET", "POST"], name="membro_create"))
-        self.router.routes.append(Route(path='/membro/details/{membro_id: int}', endpoint=self.object_details, methods=["GET"], name="membro_details"))
-        self.router.routes.append(Route(path='/membro/edit/{membro_id: int}', endpoint=self.object_edit, methods=["GET", "POST"], name="membro_edit"))
-        self.router.routes.append(Route(path='/membro/delete/{membro_id: int}', endpoint=self.object_delete, methods=["DELETE"], name="membro_delete"))
+        self.router.routes.append(Route(path='/membro/details/{membro_id:int}', endpoint=self.object_edit, methods=["GET"], name="membro_details"))
+        self.router.routes.append(Route(path='/membro/edit/{membro_id:int}', endpoint=self.object_edit, methods=["GET", "POST"], name="membro_edit"))
+        self.router.routes.append(Route(path='/membro/delete/{membro_id:int}', endpoint=self.object_delete, methods=["DELETE"], name="membro_delete"))
 
         super().__init__('membro')
 
@@ -63,11 +63,11 @@ class MembroAdmin(BaseCRUDView):
         except ValueError as err:
             nome: str = form.get('nome')
             funcao: str = form.get('funcao')
-            dados = {'nome': nome, 'funcao': funcao}
+            dados = {"nome": nome, "funcao": funcao}
             context = {'request': request, "ano": datetime.now().year, 'error': err, 'objeto': dados}
             return settings.TEMPLATES.TemplateResponse(f"admin/membro/create.html", context=context)
         
-        return RedirectResponse(request.url_for("membro_list"), status_code=status.HTTP_201_CREATED)
+        return RedirectResponse(request.url_for("membro_list"), status_code=status.HTTP_302_FOUND)
     
 
     async def object_edit(self, request: Request) -> Response:
