@@ -1,21 +1,21 @@
 {% extends 'admin/_base.html' %}
 
 {%block content%}
-    <h1 class="h3" mb-4 text-gray-800">Editar Membro</h1>
+    <h1 class="h3 mb-4 text-gray-800">Editar Membro</h1>
 
     {% if error %}
         <div class="alert alert-warning" role="alert">
             {{ error }}
     {% endif %}
 
-    <form method="post" action="{{ url_for('membro_edit', membro_id = objeto.id) }}" autocomplete="off" enctype="multipart/form-data">
+    <form method="post" action="{{ url_for('membro_edit', membro_id = object.id) }}" autocomplete="off" enctype="multipart/form-data">
         <div class="mb-3">
             <label for="nome" class="form-label">Nome</label>
-            <input type="text" class="form-control" id="nome" name="nome" value="{% if objeto %}{{ objeto.nome }}{% endif %}" required autofocus>
+            <input type="text" class="form-control" id="nome" name="nome" value="{% if object %}{{ object.nome }}{% endif %}" required autofocus>
         </div>
         <div class="mb-3">
             <label for="funcao" class="form-label">Função</label>
-            <input type="text" class="form-control" id="funcao" name="funcao" value="{% if objeto %}{{ objeto.funcao }}{% endif %}" required>
+            <input type="text" class="form-control" id="funcao" name="funcao" value="{% if object %}{{ object.funcao }}{% endif %}" required>
         </div>
         <div class="mb-3 form-check">
             <label for="imagem" class="form-label">Imagem</label>

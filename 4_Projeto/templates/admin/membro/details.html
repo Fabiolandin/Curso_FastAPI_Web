@@ -7,7 +7,7 @@
     </div>
     <div class="card-body">
         <div class="table-responsive">
-            <table classs="table table-bordered" id="dataTable" width="100%" cellscpacing="0">
+            <table class="table table-bordered" id="dataTable" width="100%" cellscpacing="0">
                 <thead>
                     <tr>
                         <th>Nome</th>
@@ -30,7 +30,7 @@
                     <a href="{{ url_for('membro_list') }}" class="btn btn-info">Voltar</a>
                 </div>
                 <div class="col">
-                    <a href="#" data-url="{{ url_for('membro_delete', membro_id=object.id) }}" data-bs-toggle="modal" data-target="#modal-delete" class="btn btn-danger">Deletar</a>
+                    <a href="#" data-url="{{ url_for('membro_delete', membro_id=object.id) }}" data-toggle="modal" data-target="#modal-delete" class="btn btn-danger">Deletar</a>
             </div>
             <div class="col">
                 <a href="{{ url_for('membro_edit', membro_id=object.id) }}" class="btn btn-primary">Editar</a>

@@ -99,6 +99,6 @@ class MembroAdmin(BaseCRUDView):
             context = {'request': request, "ano": datetime.now().year, 'error': err, 'objeto': dados}
             return settings.TEMPLATES.TemplateResponse("admin/membro/edit.html", context=context)
         
-        return RedirectResponse(request.url_for("membro_list"), status_code=status.HTTP_202_ACCEPTED)
+        return RedirectResponse(request.url_for("membro_list"), status_code=status.HTTP_302_FOUND)
     
 membro_admin = MembroAdmin()

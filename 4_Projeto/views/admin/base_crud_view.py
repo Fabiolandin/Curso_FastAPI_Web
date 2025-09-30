@@ -39,7 +39,7 @@ class BaseCRUDView:
         object = await object_controller.get_one_crud(id_obj=obj_id)
 
         if not object:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Objeto não encontrado")
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
 
         await object_controller.delete_crud(obj_id=object.id)
 
