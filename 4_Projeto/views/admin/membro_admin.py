@@ -22,7 +22,7 @@ class MembroAdmin(BaseCRUDView):
         self.router.routes.append(Route(path='/membro/create', endpoint=self.object_create, methods=["GET", "POST"], name="membro_create"))
         self.router.routes.append(Route(path='/membro/details/{membro_id:int}', endpoint=self.object_edit, methods=["GET"], name="membro_details"))
         self.router.routes.append(Route(path='/membro/edit/{membro_id:int}', endpoint=self.object_edit, methods=["GET", "POST"], name="membro_edit"))
-        self.router.routes.append(Route(path='/membro/delete/{membro_id:int}', endpoint=self.object_delete, methods=["DELETE"], name="membro_delete"))
+        self.router.routes.append(Route(path='/membro/delete/{membro_id:int}', endpoint=self.object_delete, methods=["GET", "DELETE"], name="membro_delete"))
 
         super().__init__('membro')
 

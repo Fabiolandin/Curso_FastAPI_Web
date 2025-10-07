@@ -30,13 +30,24 @@
                     <a href="{{ url_for('membro_list') }}" class="btn btn-info">Voltar</a>
                 </div>
                 <div class="col">
-                    <a href="#" data-url="{{ url_for('membro_delete', membro_id=object.id) }}" data-toggle="modal" data-target="#modal-delete" class="btn btn-danger">Deletar</a>
+                    <a href="{{ url_for('membro_delete', membro_id=object.id) }}" class="btn btn-danger btn-delete">Deletar</a>
+                </div>
+                <div class="col">
+                    <a href="{{ url_for('membro_edit', membro_id=object.id) }}" class="btn btn-primary">Editar</a>
+                </div>
             </div>
-            <div class="col">
-                <a href="{{ url_for('membro_edit', membro_id=object.id) }}" class="btn btn-primary">Editar</a>
         </div>
+
+        <script>
+        document.querySelectorAll('.btn-delete').forEach(function(btn) {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                fetch(btn.getAttribute('href'), { method: 'DELETE' })
+                    .then(() => window.location.href = "{{ url_for('membro_list') }}")
+                    .catch(err => alert('Erro ao deletar!'));
+            });
+        });
+        </script>
     </div>
 </div>
-
-{% include 'admin/modals/delete.html' %}
 {% endblock %}

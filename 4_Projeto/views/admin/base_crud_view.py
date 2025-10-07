@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from fastapi import status
-from fastapi.responses import Response
+from fastapi.responses import Response, RedirectResponse
 from fastapi.exceptions import HTTPException
 
 from core.configs import settings
@@ -41,9 +41,13 @@ class BaseCRUDView:
         if not object:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
 
-        await object_controller.delete_crud(obj_id=object.id)
+        await object_controller.delete_crud(id_obj=object.id)
 
-        return Response(object_controller.request.url_for(f"{self.template_base}_list"))
+        # Redireciona para a lista após deletar
+        return RedirectResponse(
+            url=object_controller.request.url_for(f"{self.template_base}_list"),
+            status_code=status.HTTP_302_FOUND
+        )
     
 
     async def object_details(self, object_controller: BaseController, obj_id: int) -> Response:

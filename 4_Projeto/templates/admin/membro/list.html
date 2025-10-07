@@ -34,7 +34,7 @@
                                         <i class="fas fa-pen-square"></i>
                                     </span>
                                 </a>
-                                <a href="#" data-url="{{ url_for('membro_delete', membro_id=dado.id) }}" data-toggle="modal" data-target="#modal-delete" title="Deletar">
+                                <a href="{{ url_for('membro_delete', membro_id=dado.id) }}" class="btn-delete" title="Deletar">
                                     <span class="me-1 px-2">
                                         <i class="fas fa-trash"></i>
                                     </span>
@@ -58,3 +58,13 @@
 
 {% include 'admin/modals/delete.html' %}
 {% endblock %}
+<script>
+document.querySelectorAll('.btn-delete').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        fetch(btn.getAttribute('href'), { method: 'DELETE' })
+            .then(() => location.reload())
+            .catch(err => alert('Erro ao deletar!'));
+    });
+});
+</script>
