@@ -1,7 +1,9 @@
 from datetime import datetime
 
 from fastapi.routing import APIRouter
+#Montar as rotas manualmente
 from starlette.routing import Route
+
 from fastapi import status
 from fastapi.requests import Request
 from fastapi.responses import Response, RedirectResponse
@@ -26,11 +28,13 @@ class MembroAdmin(BaseCRUDView):
 
         super().__init__('membro')
 
-    
+    #Implementa o método
     async def object_list(self, request: Request) -> Response:
         """ Rota para listar os membros """
+        #Instancia o controller
         membro_controller = MembroController(request)
 
+        #Passa o controller para o método da superclasse
         return await super().object_list(object_controller=membro_controller)
     
     
