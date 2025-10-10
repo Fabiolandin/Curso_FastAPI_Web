@@ -24,9 +24,7 @@ class MembroController(BaseController):
         funcao: str = form.get('funcao')
         imagem: UploadFile = form.get('imagem')
 
-        print("NOME:", nome)
-        print("FUNCAO:", funcao)
-        print("IMAGEM:", imagem)
+        #Validação simples para que todos os campos sejam obrigatórios!
         if not nome or not funcao or not imagem or not imagem.filename:
             raise ValueError("Todos os campos são obrigatórios.")
         
@@ -63,6 +61,7 @@ class MembroController(BaseController):
                 #O nome que recebemos do formulario é diferente do que está no banco?
                 if nome and nome != membro.nome:
                     membro.nome = nome
+                #Função que recebemos do formulario é diferente do que está no banco?
                 if funcao and funcao != membro.funcao:
                     membro.funcao = funcao
                 if imagem.filename:

@@ -6,6 +6,7 @@ from core.configs import settings
 #Passando o URL do banco para a criação do engine e pedindo para não exibir os logs SQL
 engine: AsyncEngine = create_async_engine(settings.DB_URL, echo=False)
 
+#Cria a sessão porém não fecha "async with get_session() as session:" já se encarrega de fechar
 def get_session() -> AsyncSession:
     __async_session = sessionmaker(
         autocommit=False,
