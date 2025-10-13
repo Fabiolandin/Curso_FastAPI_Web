@@ -37,7 +37,7 @@ class MembroAdmin(BaseCRUDView):
         #Passa o controller para o método da superclasse
         return await super().object_list(object_controller=membro_controller)
     
-    
+    #Implementa o método
     async def object_delete(self, request: Request) -> Response:
         """ Rota para deletar um membro """
         membro_controller: MembroController = MembroController(request)
@@ -45,7 +45,7 @@ class MembroAdmin(BaseCRUDView):
         membro_id: int = request.path_params['membro_id']
         return await super().object_delete(object_controller=membro_controller, obj_id=membro_id)
     
-    
+    #Implementa o método
     async def object_create(self, request: Request) -> Response:
         """ Rota para criar um membro """
         membro_controller: MembroController = MembroController(request)
@@ -73,7 +73,7 @@ class MembroAdmin(BaseCRUDView):
         
         return RedirectResponse(request.url_for("membro_list"), status_code=status.HTTP_302_FOUND)
     
-
+    #Implementa o método
     async def object_edit(self, request: Request) -> Response:
         """ Rota para carregar o template de edição do membro """
 
