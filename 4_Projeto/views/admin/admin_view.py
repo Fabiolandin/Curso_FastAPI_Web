@@ -5,9 +5,12 @@ from fastapi.requests import Request
 
 from core.configs import settings
 from views.admin.membro_admin import membro_admin
+from views.admin.autor_admin import autor_admin
 
 router = APIRouter(prefix='/admin')
+#Rotas admin
 router.include_router(membro_admin.router, prefix='/admin')
+router.include_router(autor_admin.router, prefix='/admin')
 
 
 @router.get('/', name='admin_index')

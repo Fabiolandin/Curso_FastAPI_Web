@@ -1,0 +1,51 @@
+{% extends 'admin/_base.html' %}
+{%block content%}
+<h1 class="h3 mb-2 text-gray-800">Membro</h1>
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">ID: {{ object.id }}</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellscpacing="0">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Imagem</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ object.nome }}</td>
+                        <td><a href="{{ url_for('media', path=object.imagem) }}" target="_blank"><img src="{{ url_for('media', path=object.imagem) }}" width="7%" height="auto"/></a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer d-flex align-items-rigth">
+            <div class="row">
+                <div class="col">
+                    <a href="{{ url_for('autor_list') }}" class="btn btn-info">Voltar</a>
+                </div>
+                <div class="col">
+                    <a href="{{ url_for('autor_delete', autor_id=object.id) }}" class="btn btn-danger btn-delete">Deletar</a>
+                </div>
+                <div class="col">
+                    <a href="{{ url_for('autor_edit', autor_id=object.id) }}" class="btn btn-primary">Editar</a>
+                </div>
+            </div>
+        </div>
+
+        <script>
+        document.querySelectorAll('.btn-delete').forEach(function(btn) {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                fetch(btn.getAttribute('href'), { method: 'DELETE' })
+                    .then(() => window.location.href = "{{ url_for('autor_list') }}")
+                    .catch(err => alert('Erro ao deletar!'));
+            });
+        });
+        </script>
+    </div>
+</div>
+{% endblock %}

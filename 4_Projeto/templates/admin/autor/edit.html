@@ -1,0 +1,23 @@
+{% extends 'admin/_base.html' %}
+
+{%block content%}
+    <h1 class="h3 mb-4 text-gray-800">Editar Autor</h1>
+
+    {% if error %}
+        <div class="alert alert-warning" role="alert">
+            {{ error }}
+    {% endif %}
+
+    <form method="post" action="{{ url_for('autor_edit', autor_id = object.id) }}" autocomplete="off" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label for="nome" class="form-label">Nome</label>
+            <input type="text" class="form-control" id="nome" name="nome" value="{% if object %}{{ object.nome }}{% endif %}" required autofocus>
+        </div>
+        <div class="mb-3 form-check">
+            <label for="imagem" class="form-label">Imagem</label>
+            <input type="file" class="form-file-input" id="imagem" name="imagem">
+        </div>
+
+        <button type="submit" class="btn btn-primary">Salvar</button>
+        <a href="{{ url_for('autor_list') }}" class="btn btn-info">Cancelar</a>
+{% endblock %}
