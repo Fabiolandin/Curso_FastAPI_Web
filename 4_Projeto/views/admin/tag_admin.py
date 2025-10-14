@@ -81,7 +81,7 @@ class TagAdmin(BaseCRUDView):
             return await super().object_details(object_controller=tag_controller, obj_id=tag_id)
         
         #Se o request for POST
-        tag = await tag_controller.get_object(obj_id=tag_id)
+        tag = await tag_controller.get_one_crud(id_obj=tag_id)
 
         if not tag:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)

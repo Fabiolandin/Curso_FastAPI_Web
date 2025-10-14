@@ -1,0 +1,19 @@
+{% extends 'admin/_base.html' %}
+
+{% block content %}
+    <h1 class="h3 mb-4 text-gray-800">Criar Tags</h1>
+
+    {% if error %}
+        <div class="alert alert-warning" role="alert">
+            {{ error }}
+    {% endif %}
+
+    <form method="post" action="{{ url_for('tag_create') }}" autocomplete="off" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label for="tag" class="form-label">Nome da Tag:</label>
+            <input type="text" class="form-control" id="tag" name="tag" value="{% if objeto %}{{ objeto.tag }}{% endif %}" required autofocus>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Salvar</button>
+    </form>
+{% endblock %}
