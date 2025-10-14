@@ -71,7 +71,7 @@ class AutorAdmin(BaseCRUDView):
 
     #Implementa o método
     async def object_edit(self, request: Request) -> Response:
-        """ Rota para carregar o tempalte de edição do autor """
+        """ Rota para carregar o template de edição do autor """
 
         autor_controller: AutorController = AutorController(request)
         autor_id: int = request.path_params['autor_id']
