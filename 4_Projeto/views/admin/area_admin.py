@@ -78,7 +78,7 @@ class AreaAdmin(BaseCRUDView):
 
         #Se o request for GET
         if request.method == 'GET':
-            return await super().object_edit(object_controller=area_controller, obj_id=area_id)
+            return await super().object_details(object_controller=area_controller, obj_id=area_id)
         
         #Se o request for POST
         area = await area_controller.get_one_crud(id_obj=area_id)
