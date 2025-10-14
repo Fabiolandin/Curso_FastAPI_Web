@@ -17,7 +17,7 @@ class BaseController:
             query = select(self.model)
             result = await session.execute(query)
 
-            return result.scalars().all()
+            return result.unique().scalars().all()
         
     async def get_one_crud(self, id_obj: int) -> Optional[object]:
         """ Retorna o objeto especificado pelo id ou None """
