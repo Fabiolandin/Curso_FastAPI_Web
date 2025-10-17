@@ -12,12 +12,18 @@
                     <tr>
                         <th>Nome</th>
                         <th>Imagem</th>
+                        <th> Tags</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td>{{ object.nome }}</td>
                         <td><a href="{{ url_for('media', path=object.imagem) }}" target="_blank"><img src="{{ url_for('media', path=object.imagem) }}" width="7%" height="auto"/></a></td>
+                        <td>
+                            {% for tag in objeto.tags %}
+                                <span class="badge badge-pill badge-success">{{tag.tag}}</span>
+                            {% endfor %}
+                        </td>
                     </tr>
                 </tbody>
             </table>

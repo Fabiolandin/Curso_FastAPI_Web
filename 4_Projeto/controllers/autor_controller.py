@@ -1,5 +1,6 @@
 from fastapi.requests import Request
 from fastapi import UploadFile
+from typing import List, Optional
 
 from aiofile import async_open
 
@@ -8,6 +9,7 @@ from uuid import uuid4
 from core.configs import settings
 from core.database import get_session
 from models.autor_model import AutorModel
+from models.tag_model import TagModel
 from controllers.base_controller import BaseController
 
 class AutorController(BaseController):
@@ -23,6 +25,7 @@ class AutorController(BaseController):
 
         nome: str = form.get('nome')
         imagem: UploadFile = form.get('imagem')
+        tags: List[str] = form.getlist('tag')
 
         #Validação para que todos os campos sejam obrigatórios!
         if not nome or not imagem or not imagem.filename:
@@ -34,6 +37,11 @@ class AutorController(BaseController):
 
         #Instanciar o objeto
         autor: AutorModel = AutorModel(nome=nome, imagem=novo_nome)
+
+        #Busca e adiciona as tags
+        for id_tag in tags:
+            tag = await self.get_tag(id_tag=int(id_tag))
+            autor.tags.append(tag)
 
         #Fazer o upload da imagem
         async with async_open(f"{settings.MEDIA}/{novo_nome}", 'wb') as afile:
@@ -57,23 +65,27 @@ class AutorController(BaseController):
 
                 nome: str = form.get('nome')
                 imagem: UploadFile = form.get('imagem')
+                tags: List[str] = form.getlist('tag')
 
-                #Atualiza o nome
-                autor.nome = nome
+                if nome and nome != autor.nome:
+                    autor.nome = nome
 
-                #Verifica se uma nova imagem foi enviada
-                if imagem and imagem.filename:
-                    #Gerando nome aleatório para a imagem
+
+                #Limpa as tags atuais
+                autor.tags = []
+
+                # Adiciona apenas as selecionadas (se houver)
+                for id_tag in tags:
+                    tag = await self.get_tag(int(id_tag))
+                    tag_local = await session.merge(tag)
+                    autor.tags.append(tag_local)
+
+                if imagem.filename:
+                    # Gera um nome aleatório
                     arquivo_ext: str = imagem.filename.split('.')[-1]
                     novo_nome: str = f"{str(uuid4())}.{arquivo_ext}"
-
-                    #Fazer o upload da nova imagem
-                    async with async_open(f"{settings.MEDIA}/{novo_nome}", 'wb') as afile:
-                        await afile.write(imagem.file.read())
-                    
-                    #Atualiza o nome da imagem no banco
                     autor.imagem = novo_nome
-                
-                #Faz o commit no banco de dados
-                session.add(autor)
+                    # Faz o upload da imagem
+                    async with async_open(f"{settings.MEDIA}/autor/{novo_nome}", "wb") as afile:
+                        await afile.write(imagem.file.read())
                 await session.commit()

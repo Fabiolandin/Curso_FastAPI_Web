@@ -4,7 +4,6 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import Integer, String, DateTime, ForeignKey
 
 from core.configs import settings
-from models.post_model import PostModel
 
 class ComentarioModel(settings.DBBaseModel):
     __tablename__ = 'comentarios'

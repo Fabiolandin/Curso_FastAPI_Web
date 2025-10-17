@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import List
 
 from fastapi.routing import APIRouter
 #Montar as rotas manualmente
@@ -52,18 +53,23 @@ class AutorAdmin(BaseCRUDView):
 
         #Se o request for GET
         if request.method == 'GET':
-            #Adicionar o request no contexto
-            context = {'request': autor_controller.request, "ano": datetime.now().year}
+            #Adicionar o request no contexto, e as tags
+            tags = await autor_controller.get_tags()
+            context = {'request': autor_controller.request, "ano": datetime.now().year, "tags": tags}
 
             return settings.TEMPLATES.TemplateResponse(f"admin/autor/create.html", context=context)
         
         #Se o request for POST
         #Recebe os dados do formulário e cria o autor
+        form = await request.form()
+        dados: set = None
+
         try:
             await autor_controller.post_crud()
         except ValueError as err:
-            nome: str = (await request.form()).get('nome')
-            dados: set = { "nome": nome }
+            nome: str = form.get('nome')
+            tags: List(str) = form.get('tag')
+            dados: set = { "nome": nome, "tags": tags}
             context = {'request': request, "ano": datetime.now().year, "erro": err, "objeto": dados}
             return settings.TEMPLATES.TemplateResponse(f"admin/autor/create.html", context=context)
         
@@ -78,7 +84,26 @@ class AutorAdmin(BaseCRUDView):
 
         #Se o request for GET
         if request.method == 'GET':
-            return await super().object_details(object_controller=autor_controller, obj_id=autor_id)
+            autor = await autor_controller.get_one_crud(id_obj=autor_id)
+
+            if not autor:
+                raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+
+            # Todas as tags disponíveis
+            tags = await autor_controller.get_tags()
+
+            # IDs das tags que o autor já possui
+            tags_list = [tag.id for tag in autor.tags] if autor.tags else []
+
+            context = {
+                'request': request,
+                'ano': datetime.now().year,
+                'object': autor,
+                'tags': tags,
+                'tags_list': tags_list
+            }
+
+            return settings.TEMPLATES.TemplateResponse("admin/autor/edit.html", context=context)
         
         #Se o request for POST
         autor = await autor_controller.get_one_crud(id_obj=autor_id)
@@ -94,7 +119,8 @@ class AutorAdmin(BaseCRUDView):
             await autor_controller.put_crud(obj=autor)
         except ValueError as err:
             nome: str = form.get('nome')
-            dados = {"nome": nome}
+            tags: List[str] = form.getlist('tag')
+            dados = {"nome": nome, "tags": tags}
             context = {'request': request, "ano": datetime.now().year, 'error': err, 'objeto': dados}
             return settings.TEMPLATES.TemplateResponse(f"admin/autor/edit.html", context=context)
         

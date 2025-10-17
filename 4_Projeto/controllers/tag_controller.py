@@ -1,8 +1,5 @@
 from fastapi.requests import Request
 
-from aiofile import async_open
-
-from core.configs import settings
 from core.database import get_session
 from models.tag_model import TagModel
 from controllers.base_controller import BaseController

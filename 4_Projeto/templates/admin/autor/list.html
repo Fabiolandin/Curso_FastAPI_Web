@@ -16,6 +16,7 @@
                         <th>ID</th>
                         <th>Nome</th>
                         <th>Imagem</th>
+                        <th>Tags</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -42,6 +43,11 @@
                             <td>{{ dado.id }}</td>
                             <td>{{ dado.nome }}</td>
                             <td><a href="{{ url_for('media', path=dado.imagem) }}" target="_blank">Ver</a></td>
+                            <td>
+                                {% for tag in dado.tags %}
+                                    <span class="badge badge-pill badge-success">{{ tag.tag }}</span>
+                                {% endfor %}
+                            </td>
                         </tr>
                         {% endfor %}
                     {% else %}

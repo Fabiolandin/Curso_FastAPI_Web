@@ -13,11 +13,25 @@
             <label for="nome" class="form-label">Nome</label>
             <input type="text" class="form-control" id="nome" name="nome" value="{% if object %}{{ object.nome }}{% endif %}" required autofocus>
         </div>
+
         <div class="mb-3 form-check">
             <label for="imagem" class="form-label">Imagem</label>
             <input type="file" class="form-file-input" id="imagem" name="imagem">
         </div>
+       <div class="mb-3">
+            <label for="funcao" class="form-label">Tags</label>
+            {% for tag in tags %}
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="tag{{tag.id}}" name="tag" value="{{tag.id}}"
+                        {% if tag.id in tags_list %} checked {% endif %}>
+                    <label class="form-check-label" for="tag{{tag.id}}">{{tag.tag}}</label>
+                </div>
+            {% endfor %}              
+        </div>
 
         <button type="submit" class="btn btn-primary">Salvar</button>
+
         <a href="{{ url_for('autor_list') }}" class="btn btn-info">Cancelar</a>
+
+    </form>
 {% endblock %}

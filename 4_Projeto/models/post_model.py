@@ -5,6 +5,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from core.configs import settings
 from models.tag_model import TagModel
 from models.autor_model import AutorModel
+from models.comentario_model import ComentarioModel
 
 from sqlalchemy import Table, Integer, String, DateTime, ForeignKey, Column
 
