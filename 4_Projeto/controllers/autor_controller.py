@@ -9,7 +9,6 @@ from uuid import uuid4
 from core.configs import settings
 from core.database import get_session
 from models.autor_model import AutorModel
-from models.tag_model import TagModel
 from controllers.base_controller import BaseController
 
 class AutorController(BaseController):

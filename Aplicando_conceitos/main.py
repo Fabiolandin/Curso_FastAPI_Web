@@ -22,7 +22,7 @@ async def produto(request: Request):
         "request": request
     }
 
-    return templates.TemplateResponse('produto.html', context=context)
+    return templates.TemplateResponse('admin/produto.html', context=context)
 
 #Post de produto / receber dados do formulario
 @app.post('/produto')
@@ -39,7 +39,7 @@ async def cad_produto(request: Request):
         "request": request
     }
 
-    return templates.TemplateResponse('produto.html', context=context)
+    return templates.TemplateResponse('admin/produto.html', context=context)
 
 #Criando rota para cliente
 @app.get('/cliente')
@@ -48,7 +48,7 @@ async def cliente(request: Request):
         "request": request
     }
 
-    return templates.TemplateResponse('cliente.html', context=context)
+    return templates.TemplateResponse('admin/cliente.html', context=context)
 
 #Post de cliente / receber dados do formulario
 @app.post('/cliente')
@@ -65,7 +65,7 @@ async def cad_cliente(request: Request):
         "request": request
     }
 
-    return templates.TemplateResponse('cliente.html', context=context)
+    return templates.TemplateResponse('admin/cliente.html', context=context)
 
 
 if __name__ == '__main__':
