@@ -1,9 +1,14 @@
 from fastapi import FastAPI
 from fastapi.requests import Request
 from fastapi.templating import Jinja2Templates
+from fastapi.staticfiles import StaticFiles
 
 app = FastAPI()
 templates = Jinja2Templates(directory='templates') #falando pro jinja renderizar os arquivos do diretório templates
+
+#Definindo o diretório para arquivos estáticos
+app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount("/media", StaticFiles(directory="media"), name="media")
 
 #Criando rota index
 @app.get('/')
@@ -13,7 +18,7 @@ async def index(request: Request, usuario: str = 'Fabio Landin'):
         "usuario": usuario
     }
 
-    return templates.TemplateResponse('index.html', context=context)
+    return templates.TemplateResponse('admin/index.html', context=context)
 
 #Criando rota produto
 @app.get('/produto')
