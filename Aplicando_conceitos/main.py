@@ -1,14 +1,21 @@
 from fastapi import FastAPI
 from fastapi.requests import Request
-from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 
-app = FastAPI()
-templates = Jinja2Templates(directory='templates') #falando pro jinja renderizar os arquivos do diretório templates
+
+from views.admin import admin_view
+#from views import home_view
+
+#Configuração do FastAPI, desabilitando a documentação automática
+app = FastAPI(docs_url=None, redoc_url=None)
 
 #Definindo o diretório para arquivos estáticos
 app.mount("/static", StaticFiles(directory="static"), name="static")
 app.mount("/media", StaticFiles(directory="media"), name="media")
+
+
+#Incluindo as rotas do admin_view
+app.include_router(admin_view.router)
 
 #Criando rota index
 @app.get('/')
@@ -18,60 +25,7 @@ async def index(request: Request, usuario: str = 'Fabio Landin'):
         "usuario": usuario
     }
 
-    return templates.TemplateResponse('admin/index.html', context=context)
-
-#Criando rota produto
-@app.get('/produto')
-async def produto(request: Request):
-    context = {
-        "request": request
-    }
-
-    return templates.TemplateResponse('admin/produto.html', context=context)
-
-#Post de produto / receber dados do formulario
-@app.post('/produto')
-async def cad_produto(request: Request):
-    form = await request.form()
-
-    nome: str = form.get('nome')
-    descricao: str = form.get('descricao')
-    quantidade: int = form.get('quantidade')
-
-    print(f'Produto: {nome}, Descrição: {descricao}, Quantidade: {quantidade}')
-
-    context = {
-        "request": request
-    }
-
-    return templates.TemplateResponse('admin/produto.html', context=context)
-
-#Criando rota para cliente
-@app.get('/cliente')
-async def cliente(request: Request):
-    context = {
-        "request": request
-    }
-
-    return templates.TemplateResponse('admin/cliente.html', context=context)
-
-#Post de cliente / receber dados do formulario
-@app.post('/cliente')
-async def cad_cliente(request: Request):
-    form = await request.form()
-
-    nome: str = form.get('nome')
-    idade: int = form.get('idade')
-    cpf: str = form.get('cpf')
-
-    print(f'Nome: {nome}, Idade: {idade}, CPF: {cpf}')
-
-    context = {
-        "request": request
-    }
-
-    return templates.TemplateResponse('admin/cliente.html', context=context)
-
+    return settings.TEMPLATES.TemplateResponse('index.html', context=context)
 
 if __name__ == '__main__':
     import uvicorn
