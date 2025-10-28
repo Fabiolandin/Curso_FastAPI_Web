@@ -15,7 +15,7 @@ class Settings(BaseSettings):
     #Caminho para a pasta de midia
     MEDIA: ClassVar[Path] = Path('media')
 
-#Diferença entre letras maiusculas e minusculas e queremos que esteja no banco de dados
+    #Diferença entre letras maiusculas e minusculas e queremos que esteja no banco de dados
     class Config:
         case_sensitive = True
 
