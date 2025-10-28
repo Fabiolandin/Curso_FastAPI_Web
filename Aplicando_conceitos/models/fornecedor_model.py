@@ -2,7 +2,7 @@ from core.configs import settings
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import String
 
-class ForncedeorModel(settings.DBBaseModel):
+class FornecedorModel(settings.DBBaseModel):
     """ Table de fornecedor """
     __tablename__ = 'fornecedor'
 
@@ -12,4 +12,4 @@ class ForncedeorModel(settings.DBBaseModel):
     telefone: Mapped[str] = mapped_column(String(15))
     email: Mapped[str] = mapped_column(String(100))
 
-    compra = Mapped[list["CompraoModel"]] = relationship("CompraModel", back_populates="fornecedor")
+    compra: Mapped[list["CompraoModel"]] = relationship("CompraModel", back_populates="fornecedor")

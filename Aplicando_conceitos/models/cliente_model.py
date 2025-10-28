@@ -14,4 +14,4 @@ class ClienteModel(settings.DBBaseModel):
     email: Mapped[str] = mapped_column(String(100))
     data_de_cadastro: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
 
-    pedido = Mapped[list["PedidoModel"]] = relationship("PedidoModel", back_populates="cliente")
+    pedido: Mapped[list["PedidoModel"]] = relationship("PedidoModel", back_populates="cliente")
