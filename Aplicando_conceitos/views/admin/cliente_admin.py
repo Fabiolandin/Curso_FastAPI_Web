@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import List
 
 from fastapi.routing import APIRouter
 #Montar as rotas manualmente
@@ -11,33 +10,101 @@ from fastapi.responses import Response, RedirectResponse
 from fastapi.exceptions import HTTPException
 
 from core.configs import settings
-#from controllers.autor_controller import AutorController
-#from views.admin.base_crud_view import BaseCRUDView
+from controllers.cliente_controller import ClienteController
+from views.admin.base_crud_view import BaseCRUDView
 
-router = APIRouter(prefix="/cliente")
 
-#Criando rota para cliente
-@router.get('/')
-async def cliente(request: Request):
-    context = {
-        "request": request
-    }
+class ClienteAdmin(BaseCRUDView):
 
-    return settings.TEMPLATES.TemplateResponse('admin/cliente.html', context=context)
+    def __init__(self) -> None:
+        self.router = APIRouter()
 
-#Post de cliente / receber dados do formulario
-@router.post('/')
-async def cad_cliente(request: Request):
-    form = await request.form()
+        self.router.routes.append(Route(path="/cliente/list", endpoint=self.object_details_list, methods=["GET"], name="cliente_list"))
+        self.router.routes.append(Route(path="/cliente/create", endpoint=self.object_create, methods=["GET", "POST"], name="cliente_create"))
+        self.router.routes.append(Route(path="/cliente/details/{cliente_id:int}", endpoint=self.object_details, methods=["GET"], name="cliente_details"))
+        self.router.routes.append(Route(path="/cliente/edit/{cliente_id:int}", endpoint=self.object_edit, methods=["GET", "POST"], name="cliente_edit"))
+        self.router.routes.append(Route(path="/cliente/delete/{cliente_id:int}", endpoint=self.object_delete, methods=["GET"], name="cliente_delete"))
 
-    nome: str = form.get('nome')
-    idade: int = form.get('idade')
-    cpf: str = form.get('cpf')
+        super().__init__("cliente")
 
-    print(f'Nome: {nome}, Idade: {idade}, CPF: {cpf}')
+    #Implementa o método de listagem
+    async def object_details_list(self, request: Request) -> Response:
+        """ Rota para listar os clientes """
+        #Instantia o controller com o request
+        cliente_controller = ClienteController(request)
 
-    context = {
-        "request": request
-    }
+        #Passa o controler para o método genérico da superclasse
+        return await super().object_list(object_controller=cliente_controller)
+    
+    async def object_delete(self, request: Request) -> Response:
+        """ Rota para deletar um cliente """
+        cliente_controller: ClienteController = ClienteController(request)
 
-    return settings.TEMPLATES.TemplateResponse('admin/cliente.html', context=context)
+        cliente_id: int = request.path_params['cliente_id']
+        return await super().object_delete(object_controller=cliente_controller, obj_id=cliente_id)
+    
+    async def object_create(self, request: Request) -> Response:
+        """ Rota para criar um cliente """
+        cliente_controller: ClienteController = ClienteController(request)
+
+        #Se o request for GET
+        if request.method == "GET":
+            context = {"request": request, "ano": datetime.now().year}
+
+            return settings.TEMPLATES.TemplateResponse(f"admin/{self.template_base}/create.html", context=context)
+        
+        #Se o request for POST
+        form = await request.form()
+        dados: set = None
+
+        try:
+            await cliente_controller.post_crud()
+        except ValueError as err:
+            nome: str = form.get("nome")
+            cpf_cnpj: str = form.get("cpf_cnpj")
+            telefone: str = form.get("telefone")
+            email: str = form.get("email")
+            context = {'request': request, "ano": datetime.now().year, "error": err, 'objeto': dados}
+            return settings.TEMPLATES.TemplateResponse(f"admin/membro/create.html", context=context)
+        
+        return RedirectResponse(request.url_for("cliente_list"), status_code=status.HTTP_302_FOUND)
+    
+    async def object_edit(self, request: Request) -> Response:
+        """ Rota para editar um cliente """
+        cliente_controller: ClienteController = ClienteController(request)
+        cliente_id: int = request.path_params['cliente_id']
+
+        #Se o request for GET
+        if request.method == "GET":
+            return await super().object_details(object_controller=cliente_controller, obj_id=cliente_id)
+        
+        #Se o request for POST
+        cliente = await cliente_controller.get_one_crud(id_obj=cliente_id)
+
+        if not cliente:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+        
+        #Pega os dados do form
+        form = await request.form()
+        dados: set = None
+
+        try:
+            await cliente_controller.put_crud(obj=cliente)
+        except ValueError as err:
+            nome: str = form.get("nome")
+            cpf_cnpj: str = form.get("cpf_cnpj")
+            telefone: str = form.get("telefone")
+            email: str = form.get("email")
+            dados = {"nome": nome, "cpf_cnpj": cpf_cnpj, "telefone": telefone, "email": email}
+            context = {'request': request, "ano": datetime.now().year, "error": err, 'objeto': dados}
+            return settings.TEMPLATES.TemplateResponse(f"admin/membro/edit.html", context=context)
+        
+        return RedirectResponse(request.url_for("cliente_list"), status_code=status.HTTP_302_FOUND)
+    
+cliente_admin = ClienteAdmin()
+    
+
+
+
+
+
