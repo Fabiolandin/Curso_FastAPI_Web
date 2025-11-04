@@ -1,0 +1,31 @@
+{% extends 'admin/_base.html' %}
+
+{% block content%}
+    <h1 class="h3 mb-4 text-gray-800">Editar Cliente</h1>
+
+    {% if error %}
+        <div class="alert alert-warning" role="alert">
+            {{ error }}
+    {% endif %}
+
+    <form method="post" action="{{ url_for('cliente_edit', cliente_id = object.id) }}" autocomplete="off" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label for="nome" class="form-label">Nome do cliente</label>
+            <input type="text" class="form-control" id="nome" name="nome" value="{% if object %}{{ object.nome }}{% endif %}" required autofocus>
+        </div>
+        <div class="mb-3">
+            <label for="funcao" class="form-label">CPF - CNPJ</label>
+            <input type="text" class="form-control" id="cpf_cnpj" name="cpf_cnpj" value="{% if object %}{{ object.cpf_cnpj }}{% endif %}" required>
+        </div>
+        <div class="mb-3">
+            <label for="funcao" class="form-label">Telefone</label>
+            <input type="text" class="form-control" id="telefone" name="telefone" value="{% if object %}{{ object.telefone }}{% endif %}" required>
+        </div>
+        <div class="mb-3">
+            <label for="funcao" class="form-label">E-mail</label>
+            <input type="text" class="form-control" id="email" name="email" value="{% if object %}{{ object.email }}{% endif %}" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Salvar</button>
+        <a href="{{ url_for('telefone_list') }}" class="btn btn-info">Cancelar</a>
+{% endblock %}
