@@ -1,14 +1,14 @@
 {% extends 'admin/_base.html' %}
 
 {% block content %}
-    <h1 class="h3 mb-4 text-gray-800">Criar Autor</h1>
+    <h1 class="h3 mb-4 text-gray-800">Criar Cliente</h1>
 
     {% if error %}
         <div class="alert alert-warning" role="alert">
             {{ error }}
     {% endif %}
 
-    <form method="post" action="{{ url_for('autor_create') }}" autocomplete="off" enctype="multipart/form-data">
+    <form method="post" action="{{ url_for('cliente_create') }}" autocomplete="off" enctype="multipart/form-data">
         <div class="mb-3">
             <label for="nome" class="form-label">Nome do cliente:</label>
             <input type="text" class="form-control" id="nome" name="nome" value="{% if objeto %}{{ objeto.nome }}{% endif %}" required autofocus>

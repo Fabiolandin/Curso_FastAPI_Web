@@ -51,7 +51,7 @@ class ClienteAdmin(BaseCRUDView):
         if request.method == "GET":
             context = {"request": request, "ano": datetime.now().year}
 
-            return settings.TEMPLATES.TemplateResponse(f"admin/{self.template_base}/create.html", context=context)
+            return settings.TEMPLATES.TemplateResponse(f"admin/cliente/create.html", context=context)
         
         #Se o request for POST
         form = await request.form()
@@ -65,7 +65,7 @@ class ClienteAdmin(BaseCRUDView):
             telefone: str = form.get("telefone")
             email: str = form.get("email")
             context = {'request': request, "ano": datetime.now().year, "error": err, 'objeto': dados}
-            return settings.TEMPLATES.TemplateResponse(f"admin/membro/create.html", context=context)
+            return settings.TEMPLATES.TemplateResponse(f"admin/cliente/create.html", context=context)
         
         return RedirectResponse(request.url_for("cliente_list"), status_code=status.HTTP_302_FOUND)
     
@@ -97,7 +97,7 @@ class ClienteAdmin(BaseCRUDView):
             email: str = form.get("email")
             dados = {"nome": nome, "cpf_cnpj": cpf_cnpj, "telefone": telefone, "email": email}
             context = {'request': request, "ano": datetime.now().year, "error": err, 'objeto': dados}
-            return settings.TEMPLATES.TemplateResponse(f"admin/membro/edit.html", context=context)
+            return settings.TEMPLATES.TemplateResponse(f"admin/cliente/edit.html", context=context)
         
         return RedirectResponse(request.url_for("cliente_list"), status_code=status.HTTP_302_FOUND)
     
