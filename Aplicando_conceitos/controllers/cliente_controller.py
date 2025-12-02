@@ -6,14 +6,14 @@ from core.database import get_session
 from models.cliente_model import ClienteModel
 from controllers.base_controller import BaseController
 
+
 class ClienteController(BaseController):
 
     def __init__(self, request: Request) -> None:
         super().__init__(request, ClienteModel)
 
-    #Criar um novo cliente
+    #Criar um cliente
     async def post_crud(self) -> None:
-
         #Recebe dados do formulario
         form = await self.request.form()
 
@@ -23,7 +23,7 @@ class ClienteController(BaseController):
         email: str = form.get('email')
         data_de_cadastro: datetime = datetime.now()
 
-        #Validação para que todos os campos sejam obrigatórios!
+        #Validação para que os campos nome email e telefone sejam obrigatórios!
         if not nome or not email or not telefone:
             raise ValueError("Todos os campos são obrigatórios.")
         
@@ -36,7 +36,7 @@ class ClienteController(BaseController):
             await session.commit()
 
     
-    #Editar um cliente
+    #Edit de cliente
     async def put_crud(self, obj: object) -> None:
         async with get_session() as session:
             #Consultando se o cliente existe no banco

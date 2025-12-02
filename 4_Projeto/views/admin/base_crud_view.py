@@ -8,7 +8,6 @@ from core.configs import settings
 from controllers.base_controller import BaseController
 
 
-
 class BaseCRUDView:
 
     def __init__(self, template_base: str) -> None:

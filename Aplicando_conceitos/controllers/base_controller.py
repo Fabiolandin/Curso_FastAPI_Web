@@ -6,12 +6,13 @@ from sqlalchemy.future import select
 from core.database import get_session
 
 class BaseController:
+
     def __init__(self, request: Request, model: object) -> None:
         self.request = request
         self.model = model
 
     async def get_all_crud(self) -> Optional[List[object]]:
-        """ Método genérico para retornar todos os objetos do modelo """
+        """ Método genérico para retornar todos os objetos do model """
         async with get_session() as session:
             query = select(self.model)
             result = await session.execute(query)
@@ -35,7 +36,6 @@ class BaseController:
     async def delete_crud(self, id_obj: int) -> None:
         """ Método genérico para deletar um objeto pelo ID """
         async with get_session() as session:
-            #obj = await session.get(self.model, id_obj)  # TESTAR DEPOIX
             obj: self.model = await session.get(self.model, id_obj)
             if obj:
                 await session.delete(obj)
