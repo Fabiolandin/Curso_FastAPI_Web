@@ -1,30 +1,34 @@
 {% extends 'admin/base.html' %}
 
-{% block content %}
-    <h1 class="h3 mb-4 text-gray-800">Criar Cliente</h1>
+{% block container %}
+<h1 class="h3 mb-4 text-gray-800">Criar Cliente</h1>
 
-    {% if error %}
-        <div class="alert alert-warning" role="alert">
-            {{ error }}
+{% if error %}
+<div class="alert alert-warning" role="alert">
+    {{ error }}
     {% endif %}
 
     <form method="post" action="{{ url_for('cliente_create') }}" autocomplete="off" enctype="multipart/form-data">
         <div class="mb-3">
             <label for="nome" class="form-label">Nome do cliente:</label>
-            <input type="text" class="form-control" id="nome" name="nome" value="{% if objeto %}{{ objeto.nome }}{% endif %}" required autofocus>
+            <input type="text" class="form-control" id="nome" name="nome"
+                value="{% if objeto %}{{ objeto.nome }}{% endif %}" required autofocus>
         </div>
         <div class="mb-3">
             <label for="funcao" class="form-label">CPF - CNPJ</label>
-            <input type="text" class="form-control" id="cpf_cnpj" name="cpf_cnpj" value="{% if objeto %}{{ objeto.cpf_cnpj }}{% endif %}" required>
+            <input type="text" class="form-control" id="cpf_cnpj" name="cpf_cnpj"
+                value="{% if objeto %}{{ objeto.cpf_cnpj }}{% endif %}" required>
         </div>
         <div class="mb-3">
             <label for="funcao" class="form-label">Telefone</label>
-            <input type="text" class="form-control" id="telefone" name="telefone" value="{% if objeto %}{{ objeto.telefone }}{% endif %}" required>
+            <input type="text" class="form-control" id="telefone" name="telefone"
+                value="{% if objeto %}{{ objeto.telefone }}{% endif %}" required>
         </div>
-            <div class="mb-3">
+        <div class="mb-3">
             <label for="funcao" class="form-label">E-mail</label>
-            <input type="text" class="form-control" id="email" name="email" value="{% if objeto %}{{ objeto.email }}{% endif %}" required>
+            <input type="text" class="form-control" id="email" name="email"
+                value="{% if objeto %}{{ objeto.email }}{% endif %}" required>
         </div>
         <button type="submit" class="btn btn-primary">Salvar</button>
     </form>
-{% endblock %}
+    {% endblock %}
