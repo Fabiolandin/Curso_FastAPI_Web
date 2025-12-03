@@ -21,7 +21,7 @@ class ClienteAdmin(BaseCRUDView):
 
         self.router.routes.append(Route(path="/cliente/list", endpoint=self.object_list, methods=["GET"], name="cliente_list"))
         self.router.routes.append(Route(path="/cliente/create", endpoint=self.object_create, methods=["GET", "POST"], name="cliente_create"))
-        self.router.routes.append(Route(path="/cliente/details/{cliente_id:int}", endpoint=self.object_details, methods=["GET"], name="cliente_details"))
+        self.router.routes.append(Route(path="/cliente/details/{cliente_id:int}", endpoint=self.object_edit, methods=["GET"], name="cliente_details"))
         self.router.routes.append(Route(path="/cliente/edit/{cliente_id:int}", endpoint=self.object_edit, methods=["GET", "POST"], name="cliente_edit"))
         self.router.routes.append(Route(path="/cliente/delete/{cliente_id:int}", endpoint=self.object_delete, methods=["GET"], name="cliente_delete"))
 

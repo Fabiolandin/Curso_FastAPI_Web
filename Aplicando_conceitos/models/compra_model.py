@@ -14,5 +14,5 @@ class CompraModel(settings.DBBaseModel):
     valor_total: Mapped[float] = mapped_column(Float, default=0.0)
 
     fornecedor: Mapped["FornecedorModel"] = relationship("FornecedorModel", back_populates="compra")
-    funcionario: Mapped["FuncionarioModel"] = relationship("FuncionarioModel", back_populates="compra")
-    item_compra: Mapped[list["ItemCompraModel"]] = relationship("ItemCompraModel", back_populates="item_compra")
+    funcionario: Mapped["FuncionarioModel"] = relationship("FuncionarioModel", back_populates="compras")
+    item_compra: Mapped[list["ItemCompraModel"]] = relationship("ItemCompraModel", back_populates="compra")

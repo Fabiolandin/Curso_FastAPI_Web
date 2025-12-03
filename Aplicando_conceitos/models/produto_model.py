@@ -17,3 +17,4 @@ class ProdutoModel(settings.DBBaseModel):
     # relacionamentos
     categoria: Mapped["CategoriaProdutoModel"] = relationship("CategoriaProdutoModel", back_populates="produto")
     item_pedido: Mapped[list["ItemPedidoModel"]] = relationship("ItemPedidoModel", back_populates="produto")
+    item_compra: Mapped[list["ItemCompraModel"]] = relationship("ItemCompraModel", back_populates="produto")

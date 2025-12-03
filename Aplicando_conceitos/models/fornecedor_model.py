@@ -12,4 +12,4 @@ class FornecedorModel(settings.DBBaseModel):
     telefone: Mapped[str] = mapped_column(String(15))
     email: Mapped[str] = mapped_column(String(100))
 
-    compra: Mapped[list["CompraoModel"]] = relationship("CompraModel", back_populates="fornecedor")
+    compra: Mapped[list["CompraModel"]] = relationship("CompraModel", back_populates="fornecedor")

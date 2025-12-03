@@ -15,4 +15,5 @@ class PedidoModel(settings.DBBaseModel):
     data_pedido: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
 
     cliente: Mapped["ClienteModel"] = relationship("ClienteModel", back_populates="pedido")
+    funcionario: Mapped["FuncionarioModel"] = relationship("FuncionarioModel", back_populates="pedidos")
     item_pedido: Mapped[list["ItemPedidoModel"]] = relationship("ItemPedidoModel", back_populates="pedido")

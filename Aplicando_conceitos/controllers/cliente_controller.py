@@ -18,7 +18,7 @@ class ClienteController(BaseController):
         form = await self.request.form()
 
         nome: str = form.get('nome')
-        cpf_cnpj: str = form.get('cpfcnpj')
+        cpf_cnpj: str = form.get('cpf_cnpj')   # corrigido
         telefone: str = form.get('telefone')
         email: str = form.get('email')
         data_de_cadastro: datetime = datetime.now()
@@ -47,7 +47,7 @@ class ClienteController(BaseController):
                 form = await self.request.form()
 
                 nome: str = form.get('nome')
-                cpf_cnpj: str = form.get('cpfcnpj')
+                cpf_cnpj: str = form.get('cpf_cnpj')   # corrigido
                 telefone: str = form.get('telefone')
                 email: str = form.get('email')
 
