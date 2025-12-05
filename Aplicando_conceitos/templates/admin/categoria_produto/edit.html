@@ -1,0 +1,24 @@
+{% extends 'admin/base.html' %}
+
+{% block container%}
+    <h1 class="h3 mb-4 text-gray-800">Editar Categoria</h1>
+
+    {% if error %}
+        <div class="alert alert-warning" role="alert">
+            {{ error }}
+    {% endif %}
+
+    <form method="post" action="{{ url_for('categoria_produto_edit', categoria_produto_id = object.id) }}" autocomplete="off" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label for="nome" class="form-label">Nome da categoria</label>
+            <input type="text" class="form-control" id="nome" name="nome" value="{% if object %}{{ object.nome }}{% endif %}" required autofocus>
+        </div>
+
+        <div class="mb-3">
+            <label for="funcao" class="form-label">Descrição</label>
+            <input type="text" class="form-control" id="descricao" name="descricao" value="{% if object %}{{ object.descricao }}{% endif %}" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Salvar</button>
+        <a href="{{ url_for('categoria_produto_list') }}" class="btn btn-info">Cancelar</a>
+{% endblock %}
