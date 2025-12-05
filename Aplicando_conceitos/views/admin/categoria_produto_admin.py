@@ -100,3 +100,5 @@ class CategoriaProdutoAdmin(BaseCRUDView):
             return settings.TEMPLATES.TemplateResponse(f"admin/categoria_produto/edit.html", context=context)
         
         return RedirectResponse(request.url_for("categoria_produto_list"), status_code=status.HTTP_302_FOUND)
+
+categoria_produto_admin = CategoriaProdutoAdmin()

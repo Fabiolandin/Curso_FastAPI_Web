@@ -1,4 +1,4 @@
-from fastapi.responses import Request
+from fastapi.requests import Request
 
 from datetime import datetime
 from core.configs import settings
@@ -24,7 +24,7 @@ class CategoriaProdutoController(BaseController):
             raise ValueError("Todos os campos são obrigatórios.")
 
         #Instanciar objeto
-        categoria_produto: CategoriaProdutoModel = (nome=nome, descricao=descricao)
+        categoria_produto: CategoriaProdutoModel = CategoriaProdutoModel(nome=nome, descricao=descricao)
         
         #Cria a sessão e insere no banco
         async with get_session() as session:
