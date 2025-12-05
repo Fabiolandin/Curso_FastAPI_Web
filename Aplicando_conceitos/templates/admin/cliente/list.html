@@ -1,6 +1,6 @@
 {% extends 'admin/base.html' %}
 {% block container %}
-<h1 class="h3 mb-2 text-gray-800">Gerenciar Membros</h1>
+<h1 class="h3 mb-2 text-gray-800">Gerenciar Clientes</h1>
 <div class="card shadow mb-4">
     <div class="card-header py-3">
         <div class="ms-3 d-inline-block">
@@ -64,12 +64,12 @@
 {% include 'admin/modals/delete.html' %}
 {% endblock %}
 <script>
-    document.querySelectorAll('.btn-delete').forEach(function (btn) {
-        btn.addEventListener('click', function (e) {
-            e.preventDefault();
-            fetch(btn.getAttribute('href'), { method: 'DELETE' })
-                .then(() => location.reload())
-                .catch(err => alert('Erro ao deletar!'));
-        });
+document.querySelectorAll('.btn-delete').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        fetch(btn.getAttribute('href'), { method: 'DELETE' })
+            .then(() => location.reload())
+            .catch(err => alert('Erro ao deletar!'));
     });
+});
 </script>

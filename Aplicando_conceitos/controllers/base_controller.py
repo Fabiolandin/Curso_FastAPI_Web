@@ -22,7 +22,8 @@ class BaseController:
     async def get_one_crud(self, id_obj: int) -> Optional[object]:
         """ Método genérico para retornar um objeto pelo ID """
         async with get_session() as session:
-            obj = self.model = await session.get(self.model, id_obj)
+            #obj = self.model = await session.get(self.model, id_obj)
+            obj = await session.get(self.model, id_obj)
             return obj
             
     async def post_crud(self) -> None:

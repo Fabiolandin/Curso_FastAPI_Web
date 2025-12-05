@@ -1,6 +1,6 @@
 {% extends 'admin/base.html' %}
-{%block content%}
-<h1 class="h3 mb-2 text-gray-800">Membro</h1>
+{%block container%}
+<h1 class="h3 mb-2 text-gray-800">Cliente</h1>
 <div class="card shadow mb-4">
     <div class="card-header py-3">
         <h6 class="m-0 font-weight-bold text-primary">ID: {{ object.id }}</h6>
@@ -22,7 +22,7 @@
                         <td>{{ object.cpf_cnpj }}</td>
                         <td>{{ object.telefone }}</td>
                         <td>{{ object.email }}</td>
-                        
+
                     </tr>
                 </tbody>
             </table>
@@ -33,24 +33,24 @@
                     <a href="{{ url_for('cliente_list') }}" class="btn btn-info">Voltar</a>
                 </div>
                 <div class="col">
-                    <a href="{{ url_for('cliente_delete', cliente_id=object.id) }}" class="btn btn-danger btn-delete">Deletar</a>
+                    <a href="{{ url_for('cliente_delete', cliente_id=object.id) }}"
+                        class="btn btn-danger btn-delete">Deletar</a>
                 </div>
                 <div class="col">
                     <a href="{{ url_for('cliente_edit', cliente_id=object.id) }}" class="btn btn-primary">Editar</a>
                 </div>
             </div>
         </div>
-
-        <script>
-        document.querySelectorAll('.btn-delete').forEach(function(btn) {
-            btn.addEventListener('click', function(e) {
-                e.preventDefault();
-                fetch(btn.getAttribute('href'), { method: 'DELETE' })
-                    .then(() => window.location.href = "{{ url_for('membro_list') }}")
-                    .catch(err => alert('Erro ao deletar!'));
-            });
-        });
-        </script>
     </div>
-</div>
+</div>  
 {% endblock %}
+<script>
+document.querySelectorAll('.btn-delete').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        fetch(btn.getAttribute('href'), { method: 'DELETE' })
+            .then(() => location.reload())
+            .catch(err => alert('Erro ao deletar!'));
+    });
+});
+</script>

@@ -23,7 +23,7 @@ class ClienteAdmin(BaseCRUDView):
         self.router.routes.append(Route(path="/cliente/create", endpoint=self.object_create, methods=["GET", "POST"], name="cliente_create"))
         self.router.routes.append(Route(path="/cliente/details/{cliente_id:int}", endpoint=self.object_edit, methods=["GET"], name="cliente_details"))
         self.router.routes.append(Route(path="/cliente/edit/{cliente_id:int}", endpoint=self.object_edit, methods=["GET", "POST"], name="cliente_edit"))
-        self.router.routes.append(Route(path="/cliente/delete/{cliente_id:int}", endpoint=self.object_delete, methods=["GET"], name="cliente_delete"))
+        self.router.routes.append(Route(path="/cliente/delete/{cliente_id:int}", endpoint=self.object_delete, methods=["GET", "DELETE"], name="cliente_delete"))
 
         super().__init__("cliente")
 
@@ -103,9 +103,3 @@ class ClienteAdmin(BaseCRUDView):
         return RedirectResponse(request.url_for("cliente_list"), status_code=status.HTTP_302_FOUND)
     
 cliente_admin = ClienteAdmin()
-    
-
-
-
-
-
