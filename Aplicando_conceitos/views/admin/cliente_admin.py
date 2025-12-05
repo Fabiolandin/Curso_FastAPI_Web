@@ -30,7 +30,7 @@ class ClienteAdmin(BaseCRUDView):
     #Implementa o método de listagem
     async def object_list(self, request: Request) -> Response:
         """ Rota para listar os clientes """
-        #Instantia o controller com o request
+        #Instancia o controller com o request
         cliente_controller = ClienteController(request)
 
         #Passa o controler para o método genérico da superclasse
