@@ -39,8 +39,6 @@ class ProdutoController(BaseController):
             return result.scalars().all()
     
 
-
-
     #Criar um novo produto
     async def post_crud(self) -> None:
 
