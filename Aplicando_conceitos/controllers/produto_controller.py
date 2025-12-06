@@ -38,10 +38,7 @@ class ProdutoController(BaseController):
             result = await session.execute(query)
             return result.scalars().all()
     
-    async def get_categoria_produto(self, id: int) -> Optional[CategoriaProdutoModel]:
-        """Retorna uma categoria de produto específica pelo ID"""
-        async with get_session() as session:
-            return await session.get(CategoriaProdutoModel, id)
+
 
 
     #Criar um novo produto
