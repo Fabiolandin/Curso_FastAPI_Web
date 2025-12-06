@@ -82,6 +82,9 @@ class ProdutoAdmin(BaseCRUDView):
 
         #Se o request for GET
         if request.method == "GET":
+            if 'details' in str(request.url):
+                return await super().object_details(object_controller=produto_controller, obj_id=produto_id)
+
             produto = await produto_controller.get_one_crud(id_obj=produto_id)
             
             if not produto:
@@ -90,15 +93,11 @@ class ProdutoAdmin(BaseCRUDView):
             # Todas as categorias disponíveis
             categorias = await produto_controller.get_categorias()
 
-            # IDs das categorias que o produto já possui
-            categorias_list = [categoria.id for categoria in produto.categorias] if produto.categorias else []
-
             context = {
                 'request': request,
                 'ano': datetime.now().year,
                 'object': produto,
-                'categorias': categorias,
-                'categorias_list': categorias_list
+                'categorias': categorias
             }
 
             return settings.TEMPLATES.TemplateResponse("admin/produto/edit.html", context=context)

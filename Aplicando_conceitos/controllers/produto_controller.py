@@ -12,11 +12,24 @@ from core.database import get_session
 from models.produto_model import ProdutoModel
 from models.categoria_produto_model import CategoriaProdutoModel
 from controllers.base_controller import BaseController
+from sqlalchemy.orm import joinedload
 
 class ProdutoController(BaseController):
-
+    
     def __init__(self, request: Request) -> None:
         super().__init__(request, ProdutoModel)
+
+    async def get_all_crud(self) -> Optional[List[ProdutoModel]]:
+        async with get_session() as session:
+            query = select(ProdutoModel).options(joinedload(ProdutoModel.categoria))
+            result = await session.execute(query)
+            return result.scalars().all()
+
+    async def get_one_crud(self, id_obj: int) -> Optional[ProdutoModel]:
+        async with get_session() as session:
+            query = select(ProdutoModel).options(joinedload(ProdutoModel.categoria)).filter(ProdutoModel.id == id_obj)
+            result = await session.execute(query)
+            return result.scalars().first()
 
     async def get_categorias(self) -> Optional[List[CategoriaProdutoModel]]:
         """Retorna todas as categorias de produtos disponíveis"""

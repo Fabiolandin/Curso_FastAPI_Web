@@ -1,6 +1,6 @@
 {% extends 'admin/base.html' %}
 {%block container%}
-<h1 class="h3 mb-2 text-gray-800">Cliente</h1>
+<h1 class="h3 mb-2 text-gray-800">Produto</h1>
 <div class="card shadow mb-4">
     <div class="card-header py-3">
         <h6 class="m-0 font-weight-bold text-primary">ID: {{ object.id }}</h6>
@@ -10,19 +10,20 @@
             <table class="table table-bordered" id="dataTable" width="100%" cellscpacing="0">
                 <thead>
                     <tr>
-                        <th>Nome do cliente</th>
-                        <th>CPF - CNPJ</th>
-                        <th>Telefone</th>
-                        <th>E-mail</th>
+                        <th>Nome</th>
+                        <th>Descrição</th>
+                        <th>Preco</th>
+                        <th>Estoque</th>
+                        <th>Categoria</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td>{{ object.nome }}</td>
-                        <td>{{ object.cpf_cnpj }}</td>
-                        <td>{{ object.telefone }}</td>
-                        <td>{{ object.email }}</td>
-
+                        <td>{{ object.descricao }}</td>
+                        <td>{{ object.preco }}</td>
+                        <td>{{ object.estoque }}</td>
+                        <td>{{ object.categoria.nome }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -30,14 +31,14 @@
         <div class="card-footer d-flex align-items-rigth">
             <div class="row">
                 <div class="col">
-                    <a href="{{ url_for('cliente_list') }}" class="btn btn-info">Voltar</a>
+                    <a href="{{ url_for('produto_list') }}" class="btn btn-info">Voltar</a>
                 </div>
                 <div class="col">
-                    <a href="{{ url_for('cliente_delete', cliente_id=object.id) }}"
+                    <a href="{{ url_for('produto_delete', produto_id=object.id) }}"
                         class="btn btn-danger btn-delete">Deletar</a>
                 </div>
                 <div class="col">
-                    <a href="{{ url_for('cliente_edit', cliente_id=object.id) }}" class="btn btn-primary">Editar</a>
+                    <a href="{{ url_for('produto_edit', produto_id=object.id) }}" class="btn btn-primary">Editar</a>
                 </div>
             </div>
         </div>
