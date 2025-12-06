@@ -1,0 +1,47 @@
+{% extends 'admin/base.html' %}
+
+{% block container %}
+<h1 class="h3 mb-4 text-gray-800">Criar Produto</h1>
+
+{% if error %}
+<div class="alert alert-warning" role="alert">
+    {{ error }}
+    {% endif %}
+
+    <form method="post" action="{{ url_for('produto_create') }}" autocomplete="off" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label for="nome" class="form-label">Nome do produto:</label>
+            <input type="text" class="form-control" id="nome" name="nome"
+                value="{% if objeto %}{{ objeto.nome }}{% endif %}" required autofocus>
+        </div>
+        <div class="mb-3">
+            <label for="descricao" class="form-label">Descrição</label>
+            <input type="text" class="form-control" id="descricao" name="descricao"
+                value="{% if objeto %}{{ objeto.descricao }}{% endif %}" required>
+        </div>
+        <div class="mb-3">
+            <label for="preco" class="form-label">Preço</label>
+            <input type="text" class="form-control" id="preco" name="preco"
+                value="{% if objeto %}{{ objeto.preco }}{% endif %}" required>
+        </div>
+        <div class="mb-3">
+            <label for="estoque" class="form-label">Estoque</label>
+            <input type="text" class="form-control" id="estoque" name="estoque"
+                value="{% if objeto %}{{ objeto.estoque }}{% endif %}" required>
+        </div>
+        <div class="mb-3">
+            <label for="tag" class="form-label">Categorias</label>
+            <select class="form-control" name="categoria_id" required>
+                {% if categorias %}
+                    <option selected disabled>Selecione uma categoria...</option>
+                    {% for categoria in categorias %}
+                        <option value="{{categoria.id}}">{{categoria.nome}}</option>
+                    {% endfor %}
+                {% else %}
+                    <option selected disabled>Ainda não existem Categorias cadastradas.</option>
+                {% endif %}              
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Salvar</button>
+    </form>
+    {% endblock %}

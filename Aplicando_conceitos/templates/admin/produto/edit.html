@@ -1,0 +1,49 @@
+{% extends 'admin/base.html' %}
+
+{% block container %}
+    <h1 class="h3 mb-4 text-gray-800">Editar Produto</h1>
+
+    {% if error %}
+        <div class="alert alert-warning" role="alert">
+            {{ error }}
+        </div>
+    {% endif %}
+
+    <form method="post" action="{{ url_for('produto_edit', produto_id=object.id) }}" autocomplete="off" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label for="nome" class="form-label">Nome do produto:</label>
+            <input type="text" class="form-control" id="nome" name="nome"
+                value="{% if object %}{{ object.nome }}{% endif %}" required autofocus>
+        </div>
+        <div class="mb-3">
+            <label for="descricao" class="form-label">Descrição</label>
+            <input type="text" class="form-control" id="descricao" name="descricao"
+                value="{% if object %}{{ object.descricao }}{% endif %}" required>
+        </div>
+        <div class="mb-3">
+            <label for="preco" class="form-label">Preço</label>
+            <input type="text" class="form-control" id="preco" name="preco"
+                value="{% if object %}{{ object.preco }}{% endif %}" required>
+        </div>
+        <div class="mb-3">
+            <label for="estoque" class="form-label">Estoque</label>
+            <input type="text" class="form-control" id="estoque" name="estoque"
+                value="{% if object %}{{ object.estoque }}{% endif %}" required>
+        </div>
+        <div class="mb-3">
+            <label for="tag" class="form-label">Categorias</label>
+            <select class="form-control" name="categoria_id" required>
+                {% if categorias %}
+                    <option disabled>Selecione uma categoria...</option>
+                    {% for categoria in categorias %}
+                        <option value="{{categoria.id}}" {% if object and object.categoria_id == categoria.id %}selected{% endif %}>{{categoria.nome}}</option>
+                    {% endfor %}
+                {% else %}
+                    <option selected disabled>Ainda não existem Categorias cadastradas.</option>
+                {% endif %}              
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Salvar</button>
+        <a href="{{ url_for('produto_list') }}" class="btn btn-info">Cancelar</a>
+    </form>
+{% endblock %}
