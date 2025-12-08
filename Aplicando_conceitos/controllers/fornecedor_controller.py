@@ -16,16 +16,16 @@ class FornecedorController(BaseController):
         form = await self.request.form()
         
         nome: str = form.get('nome')
-        cnpj: str = form.get('cnpj')
+        cpf_cnpj: str = form.get('cpf_cnpj')
         telefone: str = form.get('telefone')
         email: str = form.get('email')
 
         #Validação para que os campos nome, cnpj, telefone e email sejam obrigatórios!
-        if not nome or not cnpj or not telefone or not email:
+        if not nome or not cpf_cnpj or not telefone or not email:
             raise ValueError("Todos os campos são obrigatórios.")
 
         #Instanciar o objeto
-        fornecedor: FornecedorModel = FornecedorModel(nome=nome, cnpj=cnpj, telefone=telefone, email=email)
+        fornecedor: FornecedorModel = FornecedorModel(nome=nome, cpf_cpnj=cpf_cnpj, telefone=telefone, email=email)
 
         #Cria a sessão e insere no banco
         async with get_session() as session:
@@ -43,7 +43,7 @@ class FornecedorController(BaseController):
                 form = await self.request.form()
 
                 nome: str = form.get('nome')
-                cnpj: str = form.get('cnpj')
+                cpf_cnpj: str = form.get('cpf_cnpj')
                 telefone: str = form.get('telefone')
                 email: str = form.get('email')
 
@@ -51,9 +51,9 @@ class FornecedorController(BaseController):
                 if nome and nome != fornecedor.nome:
                     fornecedor.nome = nome
 
-                #O cnpj que recebemos é diferente do que está no banco?
-                if cnpj and cnpj != fornecedor.cnpj:
-                    fornecedor.cnpj = cnpj
+                #O cpf_cnpj que recebemos é diferente do que está no banco?
+                if cpf_cnpj and cpf_cnpj != fornecedor.cpf_cpnj:
+                    fornecedor.cpf_cpnj = cpf_cnpj
 
                 #O telefone que recebemos é diferente do que está no banco?
                 if telefone and telefone != fornecedor.telefone:
@@ -65,5 +65,3 @@ class FornecedorController(BaseController):
 
                 session.add(fornecedor)
                 await session.commit()
-        
-        

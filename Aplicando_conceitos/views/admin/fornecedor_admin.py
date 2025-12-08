@@ -11,10 +11,10 @@ from fastapi.exceptions import HTTPException
 
 from core.configs import settings
 from controllers.fornecedor_controller import FornecedorController
-from views.admin.base_crud_view import BaseCrudView
+from views.admin.base_crud_view import BaseCRUDView
 
 
-class FornecedorAdmin(BaseCrudView):
+class FornecedorAdmin(BaseCRUDView):
 
     def __init__(self) -> None:
         self.router = APIRouter()
@@ -28,7 +28,7 @@ class FornecedorAdmin(BaseCrudView):
         super().__init__("fornecedor")
 
     #Implemente o método de listagem
-    async def objec_list(self, request: Request) -> Response:
+    async def object_list(self, request: Request) -> Response:
         """ Rota para listar os fornecedores """
         #Instancia o controller com o request
         fornecedor_controller = FornecedorController(request)
