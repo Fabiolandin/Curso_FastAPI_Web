@@ -71,4 +71,34 @@ class FuncionarioAdmin(BaseCRUDView):
         
         return RedirectResponse(request.url_for("funcionario_list"), status_code=status.HTTP_302_FOUND)
 
+    async def object_edit(self, request: Request) -> Response:
+        """ Rota para editar um funcionário """
+        funcionario_controller = FuncionarioController(request)
+        funcionario_id: int = request.path_params['funcionario_id']
+
+        if request.method == "GET":
+            return await super().object_details(object_controller=funcionario_controller, obj_id=funcionario_id)
+        
+        #Se o request for POST
+        funcionario = await funcionario_controller.get_one_crud(funcionario_id)
+
+        if not funcionario:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Funcionário não encontrado")
+
+        #Pega os dados do form
+        form = await request.form()
+        dados: set = None
+
+        try: await funcionario_controller.put_crud(obj=funcionario)
+        except ValueError as err:
+            nome: str = form.get("nome")
+            cpf: str = form.get("cpf")
+            cargo: str = form.get("cargo")
+            data_admissao: str = form.get("data_admissao")
+            dados = {"nome": nome, "cpf": cpf, "cargo": cargo, "data_admissao": data_admissao}
+            context = {'request': request, "ano": datetime.now().year, "error": err, 'objeto': dados}
+            return settings.TEMPLATES.TemplateResponse(f"admin/funcionario/edit.html", context=context)
+        
+        return RedirectResponse(request.url_for("funcionario_list"), status_code=status.HTTP_302_FOUND)
+
 funcionario_admin = FuncionarioAdmin()

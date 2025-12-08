@@ -25,19 +25,19 @@
                     {% for dado in dados %}
                     <tr>
                         <td class="text-center">
-                            <a href="{{ url_for('funcionario_details', funcio_id=dado.id) }}" data-toggle="tooltip"
+                            <a href="{{ url_for('funcionario_details', funcionario_id=dado.id) }}" data-toggle="tooltip"
                                 data-placement="top" title="Ver">
                                 <span class="me-1 px-x">
                                     <i class="bi bi-eye"></i>
                                 </span>
                             </a>
-                            <a href="{{ url_for('funcionario_edit', funcio_id=dado.id) }}" data-toggle="tooltip"
+                            <a href="{{ url_for('funcionario_edit', funcionario_id=dado.id) }}" data-toggle="tooltip"
                                 data-placement="top" title="Editar">
                                 <span class="me-1 px-2">
                                     <i class="bi bi-pencil-square"></i>
                                 </span>
                             </a>
-                            <a href="{{ url_for('funcionario_delete', funcio_id=dado.id) }}" class="btn-delete"
+                            <a href="{{ url_for('funcionario_delete', funcionario_id=dado.id) }}" class="btn-delete"
                                 title="Deletar">
                                 <span class="me-1 px-2">
                                     <i class="bi bi-trash"></i>

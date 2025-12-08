@@ -8,7 +8,7 @@
             {{ error }}
     {% endif %}
 
-    <form method="post" action="{{ url_for('funcionario_edit', funcio_id = object.id) }}" autocomplete="off" enctype="multipart/form-data">
+    <form method="post" action="{{ url_for('funcionario_edit', funcionario_id = object.id) }}" autocomplete="off" enctype="multipart/form-data">
         <div class="mb-3">
             <label for="nome" class="form-label">Nome do funcionario</label>
             <input type="text" class="form-control" id="nome" name="nome" value="{% if object %}{{ object.nome }}{% endif %}" required autofocus>

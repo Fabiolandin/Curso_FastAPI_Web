@@ -1,10 +1,10 @@
-from fastapi import Request
+from fastapi.requests import Request
 
 from datetime import datetime
 from core.configs import settings
-from core.database import Session
+from core.database import get_session
 from models.funcionario_model import FuncionarioModel
-from controller.base_controller import BaseController
+from controllers.base_controller import BaseController
 
 class FuncionarioController(BaseController):
 
@@ -29,14 +29,14 @@ class FuncionarioController(BaseController):
         funcionario: FuncionarioModel = FuncionarioModel(nome=nome, cpf=cpf, cargo=cargo, data_admissao=data_admissao)
 
         #Cria a sessão e insere no banco
-        async with Session() as session:
+        async with get_session() as session:
             session.add(funcionario)
             await session.commit()
 
     
     #Editar um funcionario
     async def put_crud(self, obj: object) -> None:
-        async with Session() as session:
+        async with get_session() as session:
             #Consultando se o funcionario existe no banco
             funcionario: FuncionarioModel = await session.get(self.model, obj.id)
 

@@ -33,11 +33,11 @@
                     <a href="{{ url_for('funcionario_list') }}" class="btn btn-info">Voltar</a>
                 </div>
                 <div class="col">
-                    <a href="{{ url_for('funcionario_delete', funcio_id=object.id) }}"
+                    <a href="{{ url_for('funcionario_delete', funcionario_id=object.id) }}"
                         class="btn btn-danger btn-delete">Deletar</a>
                 </div>
                 <div class="col">
-                    <a href="{{ url_for('funcionario_edit', funcio_id=object.id) }}" class="btn btn-primary">Editar</a>
+                    <a href="{{ url_for('funcionario_edit', funcionario_id=object.id) }}" class="btn btn-primary">Editar</a>
                 </div>
             </div>
         </div>
