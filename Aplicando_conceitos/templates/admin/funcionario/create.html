@@ -1,0 +1,36 @@
+{% extends 'admin/base.html' %}
+
+{% block container %}
+<h1 class="h3 mb-4 text-gray-800">Criar Funcionario
+
+</h1>
+
+{% if error %}
+<div class="alert alert-warning" role="alert">
+    {{ error }}
+    {% endif %}
+
+    <form method="post" action="{{ url_for('funcionario_create') }}" autocomplete="off" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label for="nome" class="form-label">Nome do funcionario:</label>
+            <input type="text" class="form-control" id="nome" name="nome"
+                value="{% if objeto %}{{ objeto.nome }}{% endif %}" required autofocus>
+        </div>
+        <div class="mb-3">
+            <label for="funcao" class="form-label">CPF</label>
+            <input type="text" class="form-control" id="cpf" name="cpf"
+                value="{% if objeto %}{{ objeto.cpf }}{% endif %}" required>
+        </div>
+        <div class="mb-3">
+            <label for="funcao" class="form-label">Cargo</label>
+            <input type="text" class="form-control" id="cargo" name="cargo"
+                value="{% if objeto %}{{ objeto.cargo }}{% endif %}" required>
+        </div>
+        <div class="mb-3">
+            <label for="funcao" class="form-label">Data de admissão</label>
+            <input type="text" class="form-control" id="data_admissao" name="data_admissao"
+                value="{% if objeto %}{{ objeto.data_admissao }}{% endif %}" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Salvar</button>
+    </form>
+    {% endblock %}

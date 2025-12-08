@@ -1,0 +1,34 @@
+{% extends 'admin/base.html' %}
+
+{% block container%}
+    <h1 class="h3 mb-4 text-gray-800">Editar Funcionario</h1>
+
+    {% if error %}
+        <div class="alert alert-warning" role="alert">
+            {{ error }}
+    {% endif %}
+
+    <form method="post" action="{{ url_for('funcionario_edit', funcio_id = object.id) }}" autocomplete="off" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label for="nome" class="form-label">Nome do funcionario</label>
+            <input type="text" class="form-control" id="nome" name="nome" value="{% if object %}{{ object.nome }}{% endif %}" required autofocus>
+        </div>
+
+        <div class="mb-3">
+            <label for="funcao" class="form-label">CPF</label>
+            <input type="text" class="form-control" id="cpf" name="cpf" value="{% if object %}{{ object.cpf }}{% endif %}" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="funcao" class="form-label">Cargo</label>
+            <input type="text" class="form-control" id="cargo" name="cargo" value="{% if object %}{{ object.cargo }}{% endif %}" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="funcao" class="form-label">Data de admissão</label>
+            <input type="text" class="form-control" id="data_admissao" name="data_admissao" value="{% if object %}{{ object.data_admissao }}{% endif %}" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Salvar</button>
+        <a href="{{ url_for('funcionario_list') }}" class="btn btn-info">Cancelar</a>
+{% endblock %}
