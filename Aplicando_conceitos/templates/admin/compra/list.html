@@ -1,24 +1,23 @@
 {% extends 'admin/base.html' %}
 {% block container %}
-<h1 class="h3 mb-2 text-gray-800">Gerenciar Produtos</h1>
+<h1 class="h3 mb-2 text-gray-800">Gerenciar Compras</h1>
 <div class="card shadow mb-4">
     <div class="card-header py-3">
         <div class="ms-3 d-inline-block">
-            <a href="{{ url_for('produto_create')}}" class="btn btn-primary"> + Cadastrar</a>
+            <a href="{{ url_for('compra_create')}}" class="btn btn-primary"> + Registrar Compra</a>
         </div>
     </div>
     <div class="card-body">
         <div class="table-responsive">
-            <table classs="table table-bordered" id="dataTable" width="100%" cellscpacing="0">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                 <thead>
                     <tr>
-                        <th class="w-1"></th>
+                        <th class="w-1">Ações</th>
                         <th>ID</th>
-                        <th>Nome do produto</th>
-                        <th>Descrição</th>
-                        <th>Preço</th>
-                        <th>Estoque</th>
-                        <th>Categoria</th>
+                        <th>Fornecedor</th>
+                        <th>Funcionário</th>
+                        <th>Data</th>
+                        <th>Valor Total</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -26,19 +25,19 @@
                     {% for dado in dados %}
                     <tr>
                         <td class="text-center">
-                            <a href="{{ url_for('produto_details', produto_id=dado.id) }}" data-toggle="tooltip"
+                            <a href="{{ url_for('compra_details', compra_id=dado.id) }}" data-toggle="tooltip"
                                 data-placement="top" title="Ver">
                                 <span class="me-1 px-x">
                                     <i class="bi bi-eye"></i>
                                 </span>
                             </a>
-                            <a href="{{ url_for('produto_edit', produto_id=dado.id) }}" data-toggle="tooltip"
+                            <a href="{{ url_for('compra_edit', compra_id=dado.id) }}" data-toggle="tooltip"
                                 data-placement="top" title="Editar">
                                 <span class="me-1 px-2">
                                     <i class="bi bi-pencil-square"></i>
                                 </span>
                             </a>
-                            <a href="{{ url_for('produto_delete', produto_id=dado.id) }}" class="btn-delete"
+                            <a href="{{ url_for('compra_delete', compra_id=dado.id) }}" class="btn-delete"
                                 title="Deletar">
                                 <span class="me-1 px-2">
                                     <i class="bi bi-trash"></i>
@@ -46,19 +45,17 @@
                             </a>
                         </td>
                         <td>{{ dado.id }}</td>
-                        <td>{{ dado.nome }}</td>
-                        <td>{{ dado.descricao }}</td>
-                        <td>R$ {{ dado.preco|format_currency }}</td>
-                        <td>{{ dado.estoque }}</td>
-                        <td>
-                            <strong>{{ dado.categoria.nome }}</strong>
-                        </td>
+                        <td>{{ dado.fornecedor.nome }}</td>
+                        <td>{{ dado.funcionario.nome }}</td>
+                        <td>{{ dado.data_compra.strftime('%d/%m/%Y') }}</td>
+                        <td>R$ {{ dado.valor_total|format_currency }}</td>
                     </tr>
                     {% endfor %}
                     {% else %}
                     <tr>
-                        <td colspan="5">Nenhum registro encontrado</td>
-                        {% endif %}
+                        <td colspan="6">Nenhum registro encontrado</td>
+                    </tr>
+                    {% endif %}
                 </tbody>
             </table>
         </div>
@@ -71,9 +68,11 @@
 document.querySelectorAll('.btn-delete').forEach(function(btn) {
     btn.addEventListener('click', function(e) {
         e.preventDefault();
-        fetch(btn.getAttribute('href'), { method: 'DELETE' })
-            .then(() => location.reload())
-            .catch(err => alert('Erro ao deletar!'));
+        if(confirm('Tem certeza que deseja deletar esta compra? O estoque NÃO será revertido automaticamente.')) {
+            fetch(btn.getAttribute('href'), { method: 'DELETE' })
+                .then(() => location.reload())
+                .catch(err => alert('Erro ao deletar!'));
+        }
     });
 });
 </script>

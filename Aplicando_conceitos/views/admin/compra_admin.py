@@ -3,7 +3,7 @@ from typing import List
 
 from fastapi.routing import APIRouter
 #Montar as rotas manualmente
-from starlette.routing import Router
+from starlette.routing import Route
 
 from fastapi import status
 from fastapi.requests import Request
@@ -14,7 +14,7 @@ from core.configs import settings
 from controllers.compra_controller import CompraController
 from views.admin.base_crud_view import BaseCRUDView
 
-classe CompraAdmin(BaseCRUDView):
+class CompraAdmin(BaseCRUDView):
     def __init__(self) -> None:
         self.router = APIRouter()
 
@@ -50,24 +50,41 @@ classe CompraAdmin(BaseCRUDView):
 
         #Se o request for GET
         if request.method == "GET":
-            #Adicionar o request no contexto e as categorias
-            categorias = await compra_controller.get_categorias()
-            context = {'request': compra_controller.request, "ano": datetime.now().year, "categorias": categorias}
+            #Adicionar o request no contexto e as listas necessárias
+            fornecedores = await compra_controller.get_fornecedores()
+            funcionarios = await compra_controller.get_funcionarios()
+            produtos = await compra_controller.get_produtos()
+            
+            context = {
+                'request': compra_controller.request, 
+                "ano": datetime.now().year, 
+                "fornecedores": fornecedores, 
+                "funcionarios": funcionarios,
+                "produtos": produtos
+            }
 
             return settings.TEMPLATES.TemplateResponse(f"admin/compra/create.html", context=context)
         
         #Se o request for POST
         #Recebe os dados do formulário e cria a compra
-        form = await request.form()
-        dados: set = None
-
+        
         try:
             await compra_controller.post_crud()
         except ValueError as err:
-            nome: str = form.get('nome')
-            categorias: List[str] = form.getlist('categoria')
-            dados: set = { "nome": nome, "categorias": categorias}
-            context = {'request': request, "ano": datetime.now().year, "erro": err, "objeto": dados}
+            # Em caso de erro, re-renderizar para o usuário não perder tudo (Melhoria futura: manter dados já preenchidos)
+            # Por enquanto, apenas recarregar as listas e mostrar erro
+            fornecedores = await compra_controller.get_fornecedores()
+            funcionarios = await compra_controller.get_funcionarios()
+            produtos = await compra_controller.get_produtos()
+            
+            context = {
+                'request': request, 
+                "ano": datetime.now().year, 
+                "error": err, 
+                "fornecedores": fornecedores, 
+                "funcionarios": funcionarios,
+                "produtos": produtos
+            }
             return settings.TEMPLATES.TemplateResponse(f"admin/compra/create.html", context=context)
         
         return RedirectResponse(request.url_for('compra_list'), status_code=status.HTTP_302_FOUND)
@@ -88,14 +105,36 @@ classe CompraAdmin(BaseCRUDView):
             if not compra:
                 raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
             
-            # Todas as categorias disponíveis
-            categorias = await compra_controller.get_categorias()
+            # Dados para o formulário
+            fornecedores = await compra_controller.get_fornecedores()
+            funcionarios = await compra_controller.get_funcionarios()
 
             context = {
                 'request': request,
                 'ano': datetime.now().year,
                 'object': compra,
-                'categorias': categorias
+                'categorias': { 'fornecedores': fornecedores, 'funcionarios': funcionarios } # Passing as 'categorias' to match my template hack or better rename in template? 
+                # Actually, better to pass clean context keys and update template to match.
+                # But my template used "categorias.fornecedores". I should probably stick to that or update template.
+                # Let's update the template to use "fornecedores" and "funcionarios" directly?
+                # No, I already wrote the template in the previous step using "categorias.fornecedores". 
+                # Wait, in the previous step I WROTE: {% for f in categorias.fornecedores %}
+                # So I must pass a dictionary named 'categorias' or update the template.
+                # I'll pass clean keys here and UPDATE the template in the next step to be clean, OR just pass clean keys and trust I'll fix the template?
+                # Actually, I haven't written the template to disk yet? No, I did.
+                # It's better to update the template to use 'fornecedores' directly.
+            }
+            # Wait, let's look at what I wrote in edit.html:
+            # {% for f in categorias.fornecedores %}
+            # I should fix the Python to pass it cleanly and fix the template.
+            # actually, passing "fornecedores": fornecedores is standard. I'll do that.
+
+            context = {
+                'request': request,
+                'ano': datetime.now().year,
+                'object': compra,
+                'fornecedores': fornecedores,
+                'funcionarios': funcionarios
             }
 
             return settings.TEMPLATES.TemplateResponse("admin/compra/edit.html", context=context)

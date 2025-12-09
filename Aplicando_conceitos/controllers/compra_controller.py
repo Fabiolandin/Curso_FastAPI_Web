@@ -1,16 +1,18 @@
+from datetime import datetime
 from fastapi.requests import Request
 from typing import List, Optional
 
 from sqlalchemy.future import select
+from sqlalchemy.orm import joinedload
 
 from core.configs import settings
 from core.database import get_session
 from models.compra_model import CompraModel
 from models.fornecedor_model import FornecedorModel
 from models.funcionario_model import FuncionarioModel
-from models.item_compra_model import ItemCompraModel
 from controllers.base_controller import BaseController
-from sqlalchemy.orm import joinedload
+from models.produto_model import ProdutoModel
+from models.item_compra_model import ItemCompraModel
 
 class CompraController(BaseController):
 
@@ -21,13 +23,13 @@ class CompraController(BaseController):
         async with get_session() as session:
             query = select(CompraModel).options(joinedload(CompraModel.fornecedor), joinedload(CompraModel.funcionario), joinedload(CompraModel.item_compra))
             result = await session.execute(query)
-            return result.scalars().all()
+            return result.unique().scalars().all()
 
     async def get_one_crud(self, id_obj: int) -> Optional[CompraModel]:
         async with get_session() as session:
-            query = select(CompraModel).options(joinedload(CompraModel.fornecedor), joinedload(CompraModel.funcionario), joinedload(CompraModel.item_compra)).filter(CompraModel.id == id_obj)
+            query = select(CompraModel).options(joinedload(CompraModel.fornecedor), joinedload(CompraModel.funcionario), joinedload(CompraModel.item_compra).joinedload(ItemCompraModel.produto)).filter(CompraModel.id == id_obj)
             result = await session.execute(query)
-            return result.scalars().first()
+            return result.unique().scalars().first()
 
     async def get_fornecedores(self) -> Optional[List[FornecedorModel]]:
         async with get_session() as session:
@@ -41,6 +43,12 @@ class CompraController(BaseController):
             result = await session.execute(query)
             return result.scalars().all()
 
+    async def get_produtos(self) -> Optional[List[ProdutoModel]]:
+        async with get_session() as session:
+            query = select(ProdutoModel)
+            result = await session.execute(query)
+            return result.scalars().all()
+
     async def get_itens_compra(self) -> Optional[List[ItemCompraModel]]:
         async with get_session() as session:
             query = select(ItemCompraModel)
@@ -49,24 +57,67 @@ class CompraController(BaseController):
 
     #Criar uma compra
     async def post_crud(self) -> None:
-    
-        #Vai receber dados do formulario.ArithmeticError
+        #Vai receber dados do formulario
         form = await self.request.form()
 
-        fornecedor_id: int = form.get('fornecedor_id')
-        funcionario_id: int = form.get('funcionario_id')
-        data_compra: datetime = form.get('data_compra')
-        valor_total: float = 0.0
+        fornecedor_id: int = int(form.get('fornecedor_id'))
+        funcionario_id: int = int(form.get('funcionario_id'))
+        # Convert date string to datetime object if necessary, or let DB handle it if it matches format
+        # HTML date input usually returns YYYY-MM-DD. datetime.strptime might be safer.
+        data_compra_str: str = form.get('data_compra')
+        
+        # Lists from dynamic form
+        produto_ids = form.getlist('produto_id')
+        quantidades = form.getlist('quantidade')
+        precos_unitarios = form.getlist('valor_unitario')
 
-        #Validação para que todos os campos sejam obrigatórios!
-        if not fornecedor_id or not funcionario_id or not data_compra or not valor_total:
-            raise ValueError("Todos os campos são obrigatórios.")
-
-        #Instanciar o objeto
-        compra: CompraModel = CompraModel(fornecedor_id=int(fornecedor_id), funcionario_id=int(funcionario_id), data_compra=data_compra)
+        #Validação básica
+        if not fornecedor_id or not funcionario_id or not data_compra_str:
+             raise ValueError("Campos obrigatórios: Fornecedor, Funcionário e Data.")
+        
+        if not produto_ids or not quantidades or not precos_unitarios:
+             raise ValueError("Adicione pelo menos um produto à compra.")
 
         async with get_session() as session:
+            # 1. Create Compra
+            compra: CompraModel = CompraModel(
+                fornecedor_id=fornecedor_id, 
+                funcionario_id=funcionario_id, 
+                data_compra=datetime.strptime(data_compra_str, '%Y-%m-%d') if data_compra_str else datetime.now(),
+                valor_total=0.0 # Will calculate below
+            )
             session.add(compra)
+            await session.flush() # Flush to get compra.id
+
+            valor_total_acumulado = 0.0
+
+            # 2. Iterate items
+            for p_id, qtd, preco in zip(produto_ids, quantidades, precos_unitarios):
+                p_id = int(p_id)
+                qtd = int(qtd)
+                preco = float(preco.replace(',', '.')) # Handle comma decimal
+
+                # Create Item
+                item = ItemCompraModel(
+                    compra_id=compra.id,
+                    produto_id=p_id,
+                    quantidade=qtd,
+                    preco_unitario=preco
+                )
+                session.add(item)
+
+                # Update Stock
+                produto = await session.get(ProdutoModel, p_id)
+                if produto:
+                    produto.estoque += qtd
+                    session.add(produto)
+                
+                valor_total_acumulado += (qtd * preco)
+
+            # 3. Update Total Value
+            compra.valor_total = valor_total_acumulado
+            session.add(compra)
+
             await session.commit()
 
     #Editar um produto
@@ -96,4 +147,28 @@ class CompraController(BaseController):
                 if valor_total and valor_total != compra.valor_total:
                     compra.valor_total = valor_total
 
+                await session.commit()
+
+    async def delete_crud(self, id_obj: int) -> None:
+        async with get_session() as session:
+            # 1. Fetch compra with items
+            query = select(CompraModel).options(joinedload(CompraModel.item_compra)).filter(CompraModel.id == id_obj)
+            result = await session.execute(query)
+            compra = result.unique().scalars().first()
+
+            if compra:
+                # 2. Reverse stock
+                for item in compra.item_compra:
+                     # Fetch produto to ensure it's attached to session and current
+                     produto = await session.get(ProdutoModel, item.produto_id)
+                     if produto:
+                         produto.estoque -= item.quantidade
+                         session.add(produto)
+                
+                # 3. Delete items first (to avoid FK issues if cascade not set in DB)
+                for item in compra.item_compra:
+                    await session.delete(item)
+                
+                # 4. Delete compra
+                await session.delete(compra)
                 await session.commit()

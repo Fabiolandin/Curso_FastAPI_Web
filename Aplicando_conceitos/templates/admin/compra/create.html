@@ -1,0 +1,189 @@
+{% extends 'admin/base.html' %}
+
+{% block container %}
+<h1 class="h3 mb-4 text-gray-800">Registrar Compra (Entrada de Estoque)</h1>
+
+{% if error %}
+<div class="alert alert-warning" role="alert">
+    {{ error }}
+</div>
+{% endif %}
+
+<form method="post" action="{{ url_for('compra_create') }}" autocomplete="off">
+    <div class="row">
+        <!-- Dados da Compra -->
+        <div class="col-md-4">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Dados da Compra</h6>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="fornecedor_id">Fornecedor</label>
+                        <select class="form-control" name="fornecedor_id" id="fornecedor_id" required>
+                            <option value="" disabled selected>Selecione um Fornecedor</option>
+                            {% for f in fornecedores %}
+                            <option value="{{ f.id }}">{{ f.nome }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="funcionario_id">Funcionário</label>
+                        <select class="form-control" name="funcionario_id" id="funcionario_id" required>
+                            <option value="" disabled selected>Selecione um Funcionário</option>
+                            {% for f in funcionarios %}
+                            <option value="{{ f.id }}">{{ f.nome }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="data_compra">Data da Compra</label>
+                        <input type="date" class="form-control" name="data_compra" id="data_compra" value="{{ ano }}-01-01" required> <!-- TODO: Set current date via JS or context -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Adicionar Produtos -->
+        <div class="col-md-8">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Itens da Compra</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3 align-items-end">
+                        <div class="col-md-5">
+                            <label>Produto</label>
+                            <select class="form-control" id="select_produto">
+                                <option value="" disabled selected>Selecione...</option>
+                                {% for p in produtos %}
+                                <option value="{{ p.id }}">{{ p.nome }} (Estoque atual: {{ p.estoque }})</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label>Qtd</label>
+                            <input type="number" class="form-control" id="input_qtd" min="1" value="1">
+                        </div>
+                        <div class="col-md-3">
+                            <label>Custo Unit. (R$)</label>
+                            <input type="text" class="form-control" id="input_preco" placeholder="0,00">
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" class="btn btn-success btn-block" onclick="adicionarItem()">
+                                <i class="fa fa-plus"></i> Add
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="tabelaItens" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Produto</th>
+                                    <th>Qtd</th>
+                                    <th>Custo Unit.</th>
+                                    <th>Subtotal</th>
+                                    <th>Ação</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Linhas serão adicionadas aqui -->
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th colspan="3" class="text-right">Total:</th>
+                                    <th colspan="2">R$ <span id="span_total">0.00</span></th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn btn-primary btn-lg btn-block">Finalizar Compra</button>
+        </div>
+    </div>
+</form>
+
+<script>
+    // Define current date
+    document.getElementById('data_compra').valueAsDate = new Date();
+
+    let totalGeral = 0;
+
+    function adicionarItem() {
+        const selectProd = document.getElementById('select_produto');
+        const inputQtd = document.getElementById('input_qtd');
+        const inputPreco = document.getElementById('input_preco');
+
+        const prodId = selectProd.value;
+        const prodNome = selectProd.options[selectProd.selectedIndex].text;
+        const qtd = parseInt(inputQtd.value);
+        let precoStr = inputPreco.value.replace(',', '.');
+        const preco = parseFloat(precoStr);
+
+        if (!prodId) {
+            alert("Selecione um produto.");
+            return;
+        }
+        if (qtd <= 0 || isNaN(qtd)) {
+            alert("Quantidade inválida.");
+            return;
+        }
+        if (isNaN(preco) || preco <= 0) {
+            alert("Preço inválido.");
+            return;
+        }
+
+        const subtotal = qtd * preco;
+        totalGeral += subtotal;
+
+        const tbody = document.querySelector('#tabelaItens tbody');
+        const row = document.createElement('tr');
+
+        row.innerHTML = `
+            <td>
+                ${prodNome}
+                <input type="hidden" name="produto_id" value="${prodId}">
+            </td>
+            <td>
+                ${qtd}
+                <input type="hidden" name="quantidade" value="${qtd}">
+            </td>
+            <td>
+                R$ ${preco.toFixed(2)}
+                <input type="hidden" name="valor_unitario" value="${preco}">
+            </td>
+            <td>R$ ${subtotal.toFixed(2)}</td>
+            <td>
+                <button type="button" class="btn btn-danger btn-sm" onclick="removerItem(this, ${subtotal})">
+                    <i class="fa fa-trash"></i>
+                </button>
+            </td>
+        `;
+
+        tbody.appendChild(row);
+
+        atualizarTotalDisplay();
+
+        // Reset inputs
+        selectProd.value = "";
+        inputQtd.value = 1;
+        inputPreco.value = "";
+        selectProd.focus();
+    }
+
+    function removerItem(btn, subtotal) {
+        const row = btn.parentNode.parentNode;
+        row.parentNode.removeChild(row);
+        totalGeral -= subtotal;
+        atualizarTotalDisplay();
+    }
+
+    function atualizarTotalDisplay() {
+        document.getElementById('span_total').innerText = totalGeral.toFixed(2);
+    }
+</script>
+
+{% endblock %}

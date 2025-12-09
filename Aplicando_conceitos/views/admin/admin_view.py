@@ -9,6 +9,7 @@ from views.admin.cliente_admin import cliente_admin
 from views.admin.categoria_produto_admin import categoria_produto_admin
 from views.admin.funcionario_admin import funcionario_admin
 from views.admin.fornecedor_admin import fornecedor_admin
+from views.admin.compra_admin import compra_admin
 
 router = APIRouter(prefix='/admin')
 
@@ -18,6 +19,7 @@ router.include_router(cliente_admin.router, prefix='/admin')
 router.include_router(categoria_produto_admin.router, prefix='/admin')
 router.include_router(funcionario_admin.router, prefix='/admin')
 router.include_router(fornecedor_admin.router, prefix='/admin')
+router.include_router(compra_admin.router, prefix='/admin')
 
 @router.get('/', name='admin_index')
 async def admin_index(request: Request):
