@@ -1,10 +1,6 @@
 from fastapi.requests import Request
 from typing import List, Optional
 
-from aiofile import async_open
-
-from uuid import uuid4
-
 from sqlalchemy.future import select
 
 from core.configs import settings
