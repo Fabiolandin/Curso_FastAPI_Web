@@ -62,42 +62,40 @@ class CompraController(BaseController):
 
         fornecedor_id: int = int(form.get('fornecedor_id'))
         funcionario_id: int = int(form.get('funcionario_id'))
-        # Convert date string to datetime object if necessary, or let DB handle it if it matches format
-        # HTML date input usually returns YYYY-MM-DD. datetime.strptime might be safer.
         data_compra_str: str = form.get('data_compra')
         
-        # Lists from dynamic form
+        # Listas dinamicas do Formulario
         produto_ids = form.getlist('produto_id')
         quantidades = form.getlist('quantidade')
         precos_unitarios = form.getlist('valor_unitario')
 
-        #Validação básica
+        #Validação básica para adicionar fornecedor funcionario e data
         if not fornecedor_id or not funcionario_id or not data_compra_str:
              raise ValueError("Campos obrigatórios: Fornecedor, Funcionário e Data.")
         
+        #Validação básica para adicionar produto quantidade e preco unitario
         if not produto_ids or not quantidades or not precos_unitarios:
              raise ValueError("Adicione pelo menos um produto à compra.")
 
         async with get_session() as session:
-            # 1. Create Compra
             compra: CompraModel = CompraModel(
                 fornecedor_id=fornecedor_id, 
                 funcionario_id=funcionario_id, 
                 data_compra=datetime.strptime(data_compra_str, '%Y-%m-%d') if data_compra_str else datetime.now(),
-                valor_total=0.0 # Will calculate below
+                valor_total=0.0
             )
             session.add(compra)
-            await session.flush() # Flush to get compra.id
+            await session.flush()
 
             valor_total_acumulado = 0.0
 
-            # 2. Iterate items
+            #Iterando itens das listas
             for p_id, qtd, preco in zip(produto_ids, quantidades, precos_unitarios):
                 p_id = int(p_id)
                 qtd = int(qtd)
-                preco = float(preco.replace(',', '.')) # Handle comma decimal
+                preco = float(preco.replace(',', '.'))
 
-                # Create Item
+                #Cria item
                 item = ItemCompraModel(
                     compra_id=compra.id,
                     produto_id=p_id,
@@ -106,7 +104,7 @@ class CompraController(BaseController):
                 )
                 session.add(item)
 
-                # Update Stock
+                #Atualiza estoque
                 produto = await session.get(ProdutoModel, p_id)
                 if produto:
                     produto.estoque += qtd
@@ -114,7 +112,7 @@ class CompraController(BaseController):
                 
                 valor_total_acumulado += (qtd * preco)
 
-            # 3. Update Total Value
+            #Atualiza valor total de compra
             compra.valor_total = valor_total_acumulado
             session.add(compra)
 

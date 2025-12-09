@@ -4,7 +4,7 @@
 <div class="card shadow mb-4">
     <div class="card-header py-3">
         <div class="ms-3 d-inline-block">
-            <a href="{{ url_for('compra_create')}}" class="btn btn-primary"> + Registrar Compra</a>
+            <a href="{{ url_for('compra_create')}}" class="btn btn-primary"> + Cadastrar Compra</a>
         </div>
     </div>
     <div class="card-body">
@@ -68,7 +68,7 @@
 document.querySelectorAll('.btn-delete').forEach(function(btn) {
     btn.addEventListener('click', function(e) {
         e.preventDefault();
-        if(confirm('Tem certeza que deseja deletar esta compra? O estoque NÃO será revertido automaticamente.')) {
+        if(confirm('Tem certeza que deseja deletar esta compra? O estoque será revertido automaticamente.')) {
             fetch(btn.getAttribute('href'), { method: 'DELETE' })
                 .then(() => location.reload())
                 .catch(err => alert('Erro ao deletar!'));
