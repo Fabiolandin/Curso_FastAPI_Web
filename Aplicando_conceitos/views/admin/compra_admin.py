@@ -113,21 +113,8 @@ class CompraAdmin(BaseCRUDView):
                 'request': request,
                 'ano': datetime.now().year,
                 'object': compra,
-                'categorias': { 'fornecedores': fornecedores, 'funcionarios': funcionarios } # Passing as 'categorias' to match my template hack or better rename in template? 
-                # Actually, better to pass clean context keys and update template to match.
-                # But my template used "categorias.fornecedores". I should probably stick to that or update template.
-                # Let's update the template to use "fornecedores" and "funcionarios" directly?
-                # No, I already wrote the template in the previous step using "categorias.fornecedores". 
-                # Wait, in the previous step I WROTE: {% for f in categorias.fornecedores %}
-                # So I must pass a dictionary named 'categorias' or update the template.
-                # I'll pass clean keys here and UPDATE the template in the next step to be clean, OR just pass clean keys and trust I'll fix the template?
-                # Actually, I haven't written the template to disk yet? No, I did.
-                # It's better to update the template to use 'fornecedores' directly.
+                'categorias': { 'fornecedores': fornecedores, 'funcionarios': funcionarios } 
             }
-            # Wait, let's look at what I wrote in edit.html:
-            # {% for f in categorias.fornecedores %}
-            # I should fix the Python to pass it cleanly and fix the template.
-            # actually, passing "fornecedores": fornecedores is standard. I'll do that.
 
             context = {
                 'request': request,

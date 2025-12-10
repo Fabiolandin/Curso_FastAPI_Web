@@ -48,7 +48,7 @@
                         <td>{{ dado.fornecedor.nome }}</td>
                         <td>{{ dado.funcionario.nome }}</td>
                         <td>{{ dado.data_compra.strftime('%d/%m/%Y') }}</td>
-                        <td>R$ {{ dado.valor_total|format_currency }}</td>
+                        <td>R$ {{ dado.valor_total }}</td>
                     </tr>
                     {% endfor %}
                     {% else %}

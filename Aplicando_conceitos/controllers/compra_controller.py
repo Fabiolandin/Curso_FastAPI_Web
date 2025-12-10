@@ -149,24 +149,24 @@ class CompraController(BaseController):
 
     async def delete_crud(self, id_obj: int) -> None:
         async with get_session() as session:
-            # 1. Fetch compra with items
+            #Faz o Select da compra e dos itens:
             query = select(CompraModel).options(joinedload(CompraModel.item_compra)).filter(CompraModel.id == id_obj)
             result = await session.execute(query)
             compra = result.unique().scalars().first()
 
             if compra:
-                # 2. Reverse stock
+                #Reverte o estoque
                 for item in compra.item_compra:
-                     # Fetch produto to ensure it's attached to session and current
+                     # Busca o produto para garantir que ele esteja na sessão atual
                      produto = await session.get(ProdutoModel, item.produto_id)
                      if produto:
                          produto.estoque -= item.quantidade
                          session.add(produto)
                 
-                # 3. Delete items first (to avoid FK issues if cascade not set in DB)
+                #Deleta os itens
                 for item in compra.item_compra:
                     await session.delete(item)
                 
-                # 4. Delete compra
+                #Deleta a compra
                 await session.delete(compra)
                 await session.commit()
