@@ -118,7 +118,7 @@ class CompraController(BaseController):
 
             await session.commit()
 
-    #Editar um produto
+    #Editar uma compra
     async def put_crud(self, obj: object) -> None:
         async with get_session() as session:
             #Consultando se a compra existe no banco
