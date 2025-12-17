@@ -9,20 +9,133 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom Sidebar CSS -->
+    <link href="{{ url_for('static', path='css/sidebar.css') }}" rel="stylesheet">
 </head>
 
-<body class="bg-light">
-    {% include 'admin/navbar.html' %}
-    <br>
-    {% block navbar %}
-    {% endblock %}
-    <div class="container">
-        {% block container %}
-        {% endblock %}
+<body>
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+        <!-- Sidebar -->
+        {% include 'admin/navbar.html' %}
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper">
+            <!-- Topbar -->
+            <nav class="topbar">
+                <button class="btn btn-link mobile-toggle d-md-none" id="sidebarToggleTop">
+                    <i class="fa fa-bars"></i>
+                </button>
+                <span class="text-gray-600">FastAPI App</span>
+            </nav>
+            <!-- End of Topbar -->
+
+            <!-- Main Content -->
+            <div class="container-fluid px-4">
+                {% block container %}
+                {% endblock %}
+            </div>
+            <!-- End of Main Content -->
+        </div>
+        <!-- End of Content Wrapper -->
     </div>
+    <!-- End of Page Wrapper -->
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Sidebar Toggle Script -->
+    <script>
+        // Desktop toggle
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebar = document.querySelector('.sidebar');
+        const collapseMenu = document.getElementById('collapseMenu');
+        const menuToggle = document.querySelector('[data-bs-target="#collapseMenu"]');
+        
+        if (sidebarToggle) {
+            sidebarToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('collapsed');
+                
+                // Close menu when sidebar collapses, reopen when expands
+                if (sidebar.classList.contains('collapsed')) {
+                    if (collapseMenu && collapseMenu.classList.contains('show')) {
+                        collapseMenu.classList.remove('show');
+                        if (menuToggle) {
+                            menuToggle.classList.add('collapsed');
+                            menuToggle.setAttribute('aria-expanded', 'false');
+                        }
+                    }
+                } else {
+                    // Reopen menu when sidebar expands (if it was open before)
+                    const menuState = localStorage.getItem('menuCollapseState');
+                    if (menuState !== 'closed' && collapseMenu) {
+                        collapseMenu.classList.add('show');
+                        if (menuToggle) {
+                            menuToggle.classList.remove('collapsed');
+                            menuToggle.setAttribute('aria-expanded', 'true');
+                        }
+                    }
+                }
+            });
+        }
+
+        // Mobile toggle
+        const sidebarToggleTop = document.getElementById('sidebarToggleTop');
+        if (sidebarToggleTop) {
+            sidebarToggleTop.addEventListener('click', function() {
+                sidebar.classList.toggle('show');
+            });
+        }
+
+        // Menu collapse persistence
+        if (collapseMenu && menuToggle) {
+            // Load saved state from localStorage
+            const menuState = localStorage.getItem('menuCollapseState');
+            if (menuState === 'closed') {
+                collapseMenu.classList.remove('show');
+                menuToggle.classList.add('collapsed');
+                menuToggle.setAttribute('aria-expanded', 'false');
+            }
+            
+            // Save state when toggled
+            menuToggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Don't allow opening menu when sidebar is collapsed
+                if (sidebar.classList.contains('collapsed')) {
+                    return;
+                }
+                
+                const isOpen = collapseMenu.classList.contains('show');
+                
+                if (isOpen) {
+                    // Closing animation
+                    collapseMenu.classList.remove('show');
+                    menuToggle.classList.add('collapsed');
+                    menuToggle.setAttribute('aria-expanded', 'false');
+                    localStorage.setItem('menuCollapseState', 'closed');
+                } else {
+                    // Opening animation
+                    collapseMenu.classList.add('show');
+                    menuToggle.classList.remove('collapsed');
+                    menuToggle.setAttribute('aria-expanded', 'true');
+                    localStorage.setItem('menuCollapseState', 'open');
+                }
+            });
+            
+            // Prevent collapse from closing when clicking submenu items
+            const collapseItems = collapseMenu.querySelectorAll('.collapse-item');
+            collapseItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    // Allow navigation but keep menu open
+                    localStorage.setItem('menuCollapseState', 'open');
+                });
+            });
+        }
+    </script>
 </body>
 
 </html>

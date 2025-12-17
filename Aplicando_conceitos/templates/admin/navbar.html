@@ -1,35 +1,61 @@
-{% block navbar %}
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-    <div class="container">
-        <a class="navbar-brand" href="/admin">FastAPI App</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="/admin">Início</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/admin/produto/list">Produtos</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/admin/cliente/list">Clientes</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/admin/categoria_produto/list">Categorias de Produtos</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/admin/funcionario/list">Funcionarios</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/admin/compra/list">Compras</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/admin/pedido/list">Pedidos</a>
-                </li>
-            </ul>
+<aside class="sidebar" id="sidebar">
+    <!-- Sidebar Brand -->
+    <a class="sidebar-brand" href="/admin">
+        <div class="sidebar-brand-icon">
+            <i class="fas fa-cube"></i>
         </div>
-    </div>
-</nav>
-{% endblock %}
+        <div class="sidebar-brand-text">FastAPI App</div>
+    </a>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+
+    <!-- Navigation -->
+    <ul class="sidebar-nav">
+        <li class="nav-item">
+            <a class="nav-link" href="/admin">
+                <i class="fas fa-fw fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+        </li>
+
+        <!-- Divider -->
+        <hr class="sidebar-divider">
+
+        <!-- Heading -->
+        <li class="nav-item">
+            <a class="nav-link" href="#" data-bs-target="#collapseMenu" aria-expanded="true">
+                <i class="fas fa-fw fa-cog"></i>
+                <span>Gerenciamento</span>
+            </a>
+            <div id="collapseMenu" class="collapse show">
+                <a class="collapse-item" href="/admin/produto/list">
+                    <i class="bi bi-box-seam"></i> Produtos
+                </a>
+                <a class="collapse-item" href="/admin/cliente/list">
+                    <i class="bi bi-people"></i> Clientes
+                </a>
+                <a class="collapse-item" href="/admin/categoria_produto/list">
+                    <i class="bi bi-tags"></i> Categorias
+                </a>
+                <a class="collapse-item" href="/admin/funcionario/list">
+                    <i class="bi bi-person-badge"></i> Funcionários
+                </a>
+                <a class="collapse-item" href="/admin/fornecedor/list">
+                    <i class="bi bi-truck"></i> Fornecedores
+                </a>
+                <a class="collapse-item" href="/admin/compra/list">
+                    <i class="bi bi-cart"></i> Compras
+                </a>
+                <a class="collapse-item" href="/admin/pedido/list">
+                    <i class="bi bi-receipt"></i> Pedidos
+                </a>
+            </div>
+        </li>
+    </ul>
+
+    <!-- Sidebar Toggle (Desktop) -->
+    <button class="sidebar-toggle d-none d-md-block" id="sidebarToggle">
+        <i class="fas fa-angle-left"></i>
+    </button>
+</aside>
