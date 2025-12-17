@@ -1,0 +1,53 @@
+{% extends 'admin/base.html' %}
+
+{% block container %}
+    <h1 class="h3 mb-4 text-gray-800">Editar Pedido #{{ object.id }}</h1>
+
+    {% if error %}
+        <div class="alert alert-warning" role="alert">
+            {{ error }}
+        </div>
+    {% endif %}
+
+    <div class="alert alert-info">
+        Nota: Para alterar itens de estoque, recomenda-se excluir este pedido e criar um novo para garantir a integridade do estoque.
+    </div>
+
+    <form method="post" action="{{ url_for('pedido_edit', pedido_id=object.id) }}" autocomplete="off">
+        <div class="card shadow mb-4">
+            <div class="card-body">
+                <div class="form-group">
+                    <label for="cliente_id">Cliente</label>
+                    <select class="form-control" name="cliente_id" id="cliente_id" required>
+                        {% for f in clientes %} 
+                        <option value="{{ f.id }}" {% if object.cliente_id == f.id %}selected{% endif %}>{{ f.nome }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="funcionario_id">Funcionário</label>
+                    <select class="form-control" name="funcionario_id" id="funcionario_id" required>
+                         {% for f in funcionarios %}
+                        <option value="{{ f.id }}" {% if object.funcionario_id == f.id %}selected{% endif %}>{{ f.nome }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="data_pedido">Data do Pedido</label>
+                    <!-- Formatting datetime to YYYY-MM-DD for input type date -->
+                    <input type="date" class="form-control" name="data_pedido" id="data_pedido" 
+                           value="{{ object.data_pedido.strftime('%Y-%m-%d') }}" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Valor Total (Calculado)</label>
+                    <input type="text" class="form-control" value="{{ object.valor_total }}" disabled>
+                </div>
+            </div>
+            <div class="card-footer">
+                 <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                 <a href="{{ url_for('pedido_list') }}" class="btn btn-secondary">Cancelar</a>
+            </div>
+        </div>
+    </form>
+{% endblock %}

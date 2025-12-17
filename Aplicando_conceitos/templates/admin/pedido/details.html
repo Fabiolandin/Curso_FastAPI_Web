@@ -1,0 +1,67 @@
+{% extends 'admin/base.html' %}
+{%block container%}
+<h1 class="h3 mb-2 text-gray-800">Detalhes do Pedido #{{ object.id }}</h1>
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Dados Gerais</h6>
+    </div>
+    <div class="card-body">
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <strong>Cliente:</strong> {{ object.cliente.nome }}
+            </div>
+            <div class="col-md-6">
+                <strong>Funcionário:</strong> {{ object.funcionario.nome }}
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <strong>Data:</strong> {{ object.data_pedido.strftime('%d/%m/%Y') }}
+            </div>
+            <div class="col-md-6">
+                <strong>Valor Total:</strong> R$ {{ object.valor_total }}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Itens Vendidos</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Produto</th>
+                        <th>Quantidade</th>
+                        <th>Preço Unitário</th>
+                        <th>Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in object.item_pedido %}
+                    <tr>
+                        <td>
+                            {% if item.produto %}
+                                {{ item.produto.nome }}
+                            {% else %}
+                                Produto Deletado
+                            {% endif %}
+                        </td>
+                        <td>{{ item.quantidade }}</td>
+                        <td>R$ {{ item.preco_unitario }}</td>
+                        <td>R$ {{ (item.quantidade * item.preco_unitario) }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="card-footer">
+        <a href="{{ url_for('pedido_list') }}" class="btn btn-secondary">Voltar</a>
+        <a href="{{ url_for('pedido_edit', pedido_id=object.id) }}" class="btn btn-primary">Editar Cabeçalho</a>
+    </div>
+</div>  
+{% endblock %}
