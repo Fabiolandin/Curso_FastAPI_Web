@@ -95,6 +95,18 @@ class PedidoController(BaseController):
                 qtd = int(qtd)
                 preco = float(preco.replace(',', '.')) if isinstance(preco, str) else float(preco)
 
+                #Busca o produto para validar estoque
+                produto = await session.get(ProdutoModel, p_id)
+                if not produto:
+                    raise ValueError(f"Produto com ID {p_id} não encontrado.")
+                
+                #Validação de estoque: verifica se há quantidade suficiente
+                if produto.estoque < qtd:
+                    raise ValueError(
+                        f"Estoque insuficiente para o produto '{produto.nome}'. "
+                        f"Quantidade solicitada: {qtd}, Estoque disponível: {produto.estoque}"
+                    )
+
                 #Cria item
                 item = ItemPedidoModel(
                     pedido_id=pedido.id,
@@ -105,10 +117,8 @@ class PedidoController(BaseController):
                 session.add(item)
 
                 #Atualiza estoque (Saída)
-                produto = await session.get(ProdutoModel, p_id)
-                if produto:
-                    produto.estoque -= qtd
-                    session.add(produto)
+                produto.estoque -= qtd
+                session.add(produto)
                 
                 valor_total_acumulado += (qtd * preco)
 
